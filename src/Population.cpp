@@ -1,17 +1,17 @@
-#include "Population.h"
+#include "../include/Population.h"
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
 #include <stdint.h>
 #include <iostream>
-//#include <RandomHelper.h>
+#include "../include/RandomGeneratorHelper.h"
 
 #define RANDOM_UPPERBOUND 2
 
 using namespace std;
 
 vector<vector<int>> individuals;
-//RandomHelper randomHelper;
+RandomGeneratorHelper randomHelper;
 
 Population::Population()
 {
@@ -59,9 +59,15 @@ void Population::create(int individualSize)
 
 void Population::makeCrossover(int first, int second)
 {
-//    int crossoverPoint = randomHelper.getRandomFromZero(this->individualSize);
-//    cout << "CrossoverPoint: " << crossoverPoint << endl;
+    int crossoverPoint = randomHelper.getRandomFromZero(this->individualSize);
+    int alleleTemp;
 
+    for (int allele = crossoverPoint; allele < this->individualSize; ++allele)
+    {
+        alleleTemp = individuals.at(first).at(allele);
+        individuals.at(first).at(allele) = individuals.at(second).at(allele);
+        individuals.at(second).at(allele) = alleleTemp;
+    }
 }
 
 int Population::getAllele(int individual, int position)

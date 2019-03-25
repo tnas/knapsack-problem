@@ -1,4 +1,4 @@
-#include "Knapsack.h"
+#include "../include/Knapsack.h"
 
 #define NUM_ITENS 42
 

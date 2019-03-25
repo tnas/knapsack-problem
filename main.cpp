@@ -1,7 +1,7 @@
 #include <iostream>
-#include <AGCanonico.h>
-#include <Knapsack.h>
-#include <Population.h>
+#include "include/AGCanonico.h"
+#include "include/Knapsack.h"
+#include "include/Population.h"
 
 using namespace std;
 

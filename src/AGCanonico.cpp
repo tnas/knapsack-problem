@@ -1,4 +1,4 @@
-#include "AGCanonico.h"
+#include "../include/AGCanonico.h"
 #include <iostream>
 #include <time.h>
 
@@ -74,9 +74,11 @@ int runRouletteWhellSelection(Population population)
 
 void AGCanonico::executeEvolution()
 {
-    this->population.create(this->knapsack.getMaxNumberOfItens());
-    //this->population.create(20);
+    //this->population.create(this->knapsack.getMaxNumberOfItens());
+    this->population.create(20);
     evaluateFitness(this->population, this->knapsack);
+    this->population.show();
+    printFitness(this->population);
 
     int generation = 0;
     while (generation < MAX_GENERATIONS)
@@ -85,14 +87,14 @@ void AGCanonico::executeEvolution()
         {
             int stIndiv = runRouletteWhellSelection(this->population);
             int ndIndiv = runRouletteWhellSelection(this->population);
-            this->population.makeCrossover(stIndiv, ndIndiv);
+            //this->population.makeCrossover(stIndiv, ndIndiv);
         }
 
         ++generation;
     }
 
-    //printFitness(this->population);
-    //this->population.show();
+
+
 
 }
 

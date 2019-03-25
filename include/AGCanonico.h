@@ -3,8 +3,8 @@
 
 #define MAX_GENERATIONS 10
 
-#include <Knapsack.h>
-#include <Population.h>
+#include "Knapsack.h"
+#include "Population.h"
 
 class AGCanonico
 {
