@@ -1,0 +1,46 @@
+# depslib dependency file v1.0
+1553511531 source:/home/thiago/projects/knapsack-problem/main.cpp
+	<iostream>
+	"include/AGCanonico.h"
+	"include/Knapsack.h"
+	"include/Population.h"
+
+1553514337 source:/home/thiago/projects/knapsack-problem/src/AGCanonico.cpp
+	"../include/AGCanonico.h"
+	<iostream>
+	<time.h>
+
+1553511348 /home/thiago/projects/knapsack-problem/include/AGCanonico.h
+	"Knapsack.h"
+	"Population.h"
+
+1553510339 /home/thiago/projects/knapsack-problem/include/Knapsack.h
+
+1553510339 /home/thiago/projects/knapsack-problem/include/Population.h
+
+1553511426 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
+	"../include/Knapsack.h"
+
+1553513513 source:/home/thiago/projects/knapsack-problem/src/Population.cpp
+	"../include/Population.h"
+	<vector>
+	<stdlib.h>
+	<time.h>
+	<stdint.h>
+	<iostream>
+	"../include/RandomGeneratorHelper.h"
+
+1553511446 source:/home/thiago/projects/knapsack-problem/src/RandomHelper.cpp
+	"../include/RandomHelper.h"
+	<time.h>
+	<stdlib.h>
+
+1553510339 /home/thiago/projects/knapsack-problem/include/RandomHelper.h
+
+1553512592 /home/thiago/projects/knapsack-problem/include/RandomGeneratorHelper.h
+
+1553512711 source:/home/thiago/projects/knapsack-problem/src/RandomGeneratorHelper.cpp
+	"RandomGeneratorHelper.h"
+	<time.h>
+	<stdlib.h>
+
