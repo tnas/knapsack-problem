@@ -54,7 +54,7 @@ bool isKnapsackFeasible(vector<int> indiv, Knapsack knapsack)
     unsigned int instanceSize = indiv.size();
 
     unsigned int* instance = new unsigned int[instanceSize]();
-    for (unsigned int pos = 0; pos < instanceSize; ++ pos)
+    for (unsigned int pos = 0; pos < instanceSize; ++pos)
     {
         instance[pos] = indiv.at(pos);
     }
@@ -227,17 +227,17 @@ unsigned int CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)
         indivWeight += this->knapsack.getItemWeight(pos) * (*it);
     }
 
-    return this->knapsack.getMaximumWeight() *
-        abs(indivWeight - this->knapsack.getCapacity());
+    //return abs(indivWeight - this->knapsack.getCapacity());
+    return this->knapsack.getCapacity();
 }
 
 ExecutionReport CanonicalGA::executeEvolution()
 {
     vector<vector<int>> generation;
     vector<vector<int>>::iterator itChild;
-    generation = this->population.create(this->knapsack.getMaxNumberOfItens());
 
 //    this->population.setThreshold(3);
+    generation = this->population.create(this->knapsack.getMaxNumberOfItens());
 //    generation = this->population.create(5);
 //
 //    cout << "Original Population: " << endl;
@@ -275,13 +275,13 @@ ExecutionReport CanonicalGA::executeEvolution()
                 ndIndiv = runRouletteWhellSelection();
             } while (stIndiv == ndIndiv);
 
-            //cout << "st: " << stIndiv << " nd: " << ndIndiv << endl;
+//            cout << "st: " << stIndiv << " nd: " << ndIndiv << endl;
             generation = this->population.reproduce(stIndiv, ndIndiv);
             this->moderateGeneration(generation);
             this->population.addIndividuals(generation);
         }
 
-        //cout << "Descendants: " << endl;
+//        cout << "Descendants: " << endl;
         //this->population.showDescendants();
 
         //this->population.join();
@@ -322,7 +322,7 @@ ExecutionReport CanonicalGA::executeEvolution()
         //this->population.show();
 
         //this->population.showDescendants();
-        //cout << "generation " << generation << endl;
+//        cout << "Generation: " << generationNumber << endl;
         ++generationNumber;
     }
 

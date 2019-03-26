@@ -15,7 +15,7 @@ int main()
     CanonicalGA canonicalGA(knapsack, population, InfeasiblesPolicy::Penalize);
 
     ExecutionReport report = canonicalGA.executeEvolution();
-    report.print();
+    report.printCompactedFormat();
 
     return 0;
 }
