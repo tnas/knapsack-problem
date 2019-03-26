@@ -72,3 +72,8 @@ void Knapsack::setCapacity(unsigned int capacity)
 {
     this->capacity = capacity;
 }
+
+unsigned int Knapsack::getCapacity()
+{
+    return this->capacity;
+}

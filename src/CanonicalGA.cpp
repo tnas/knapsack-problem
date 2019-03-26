@@ -14,10 +14,11 @@ CanonicalGA::CanonicalGA()
     this->generationsLimit = MAX_GENERATIONS;
 }
 
-CanonicalGA::CanonicalGA(Knapsack knapsack, Population population, InfeasiblesModeration moderation)
+CanonicalGA::CanonicalGA(Knapsack knapsack, Population population, InfeasiblesPolicy infeasiblesPolicy)
 {
     this->knapsack = knapsack;
     this->population = population;
+    this->infeasiblesPolicy = infeasiblesPolicy;
 }
 
 CanonicalGA::~CanonicalGA()
@@ -74,7 +75,7 @@ void printFitness(Population population)
 {
     for (Fitness fit : fitnessStatus)
     {
-        cout << "Chromosome: " << fit.getChromosome() <<
+        cout << "Chromosome: " << fit.getId() <<
         " Value: " << fit.getValue() << endl;
     }
 }
@@ -132,29 +133,101 @@ bool isKnapsackFeasible(vector<int> indiv, Knapsack knapsack)
     return isFeasible;
 }
 
+void CanonicalGA::moderateGeneration(vector<vector<int>> &generation)
+{
+    vector<vector<int>>::iterator it;
 
-void moderateGeneration()
+    if (this->infeasiblesPolicy == InfeasiblesPolicy::Repair)
+    {
+        for (it = generation.begin(); it != generation.end(); ++it)
+        {
+            if (!isKnapsackFeasible(*it, this->knapsack))
+            {
+                //cout << "Individual is not feasible!" << endl;
+                this->repairInfeasibleIndividual(*it);
+            }
+        }
+    }
+    else
+    {
+
+    }
+}
+
+void CanonicalGA::repairInfeasibleIndividual(vector<int> &indiv)
+{
+    vector<int>::iterator it;
+    vector<Fitness> allelesEvaluation;
+    unsigned int pos, value, weight, totalWeight;
+
+    //cout << "Before reparing: ";
+    //this->population.showIndividual(indiv);
+
+    pos = totalWeight = 0;
+
+    for (it = indiv.begin(); it != indiv.end(); ++it)
+    {
+        int allele = *it;
+
+        if (allele == 0)
+        {
+            value = weight = 0;
+        }
+        else
+        {
+            value  = this->knapsack.getItemValue(pos);
+            weight = this->knapsack.getItemWeight(pos);
+        }
+
+        totalWeight += weight;
+        allelesEvaluation.push_back(Fitness(pos, value, weight));
+        ++pos;
+    }
+
+    sort(fitnessStatus.begin(), fitnessStatus.end());
+
+    for (vector<Fitness>::iterator itFit = allelesEvaluation.begin();
+         itFit != allelesEvaluation.end() && totalWeight > this->knapsack.getCapacity();
+         ++itFit)
+    {
+        Fitness alleleFit = *itFit;
+        if (alleleFit.getValue() == 0) continue;
+
+        indiv.at(alleleFit.getId()) = 0;
+        totalWeight -= alleleFit.getWeight();
+    }
+
+    //cout << "After reparing: ";
+    //this->population.showIndividual(indiv);
+}
+
+void CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)
 {
 
 }
-
 
 ExecutionReport CanonicalGA::executeEvolution()
 {
     vector<vector<int>> generation;
     vector<vector<int>>::iterator itChild;
-    //generation = this->population.create(this->knapsack.getMaxNumberOfItens());
+    generation = this->population.create(this->knapsack.getMaxNumberOfItens());
 
-    this->population.setThreshold(5);
-    generation = this->population.create(5);
+//    this->population.setThreshold(3);
+//    generation = this->population.create(5);
+//
+//    cout << "Original Population: " << endl;
+//    this->population.show(generation);
 
+    this->moderateGeneration(generation);
+    this->population.addIndividuals(generation);
 
+//    cout << "Repaired Population: " << endl;
+//    this->population.show();
 
     evaluateFitness(this->population, this->knapsack);
 
-    //this->population.show();
-    cout << "Fitness: " << endl;
-    printFitness(this->population);
+//    cout << "Fitness: " << endl;
+//    printFitness(this->population);
 
     int generationNumber = 0;
     int stIndiv, ndIndiv;
@@ -179,6 +252,8 @@ ExecutionReport CanonicalGA::executeEvolution()
 
             //cout << "st: " << stIndiv << " nd: " << ndIndiv << endl;
             generation = this->population.reproduce(stIndiv, ndIndiv);
+            this->moderateGeneration(generation);
+            this->population.addIndividuals(generation);
 
             while (!generation.empty())
             {
@@ -191,7 +266,7 @@ ExecutionReport CanonicalGA::executeEvolution()
                 }
                 else
                 {
-                    cout << "Child is not feasible!" << endl;
+                    //cout << "Child is not feasible!" << endl;
                 }
             }
         }
@@ -216,7 +291,7 @@ ExecutionReport CanonicalGA::executeEvolution()
         for (it = fitnessStatus.begin();
             it != fitnessStatus.end() && pos < this->population.getThreshold(); ++it)
         {
-            selecteds[pos++] = it->getChromosome();
+            selecteds[pos++] = it->getId();
             //cout << "Chrome: " << it->getChromosome() << " Val: " << it->getValue() << endl;
         }
         fitnessStatus.erase(it, fitnessStatus.end());
@@ -228,7 +303,7 @@ ExecutionReport CanonicalGA::executeEvolution()
 
         if (bestFromGeneration.getValue() > bestFitnessValue)
         {
-            bestChromosome = this->population.selectIndividual(bestFromGeneration.getChromosome());
+            bestChromosome = this->population.selectIndividual(bestFromGeneration.getId());
             bestFitnessValue = bestFromGeneration.getValue();
         }
 
@@ -248,16 +323,6 @@ ExecutionReport CanonicalGA::executeEvolution()
     report.setNumberOfGenerations(generationNumber);
 
     return report;
-}
-
-void CanonicalGA::repairInfeasibleIndividual(vector<int> indiv)
-{
-
-}
-
-void CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)
-{
-
 }
 
 void CanonicalGA::setKnapsack(Knapsack knapsack)

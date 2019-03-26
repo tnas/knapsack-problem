@@ -37,6 +37,8 @@ class Population
         unsigned int getThreshold();
         int getCurrentSize();
         void show();
+        void show(vector<vector<int>> generation);
+        void showIndividual(vector<int> indiv);
         void showDescendants();
 };
 

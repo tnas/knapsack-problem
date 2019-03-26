@@ -1,7 +1,7 @@
 #ifndef KNAPSACK_H
 #define KNAPSACK_H
 
-#define DEFAULT_CAPACITY 12
+#define DEFAULT_CAPACITY 120
 
 class Knapsack
 {
@@ -17,6 +17,7 @@ class Knapsack
         int getMaxNumberOfItens();
         int getItemWeight(int item);
         int getItemValue(int item);
+        unsigned int getCapacity();
         void setCapacity(unsigned int capacity);
 
     protected:

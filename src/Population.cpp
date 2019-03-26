@@ -191,18 +191,34 @@ int Population::getCurrentSize()
     return individuals.size();
 }
 
-void Population::show()
+void Population::showIndividual(vector<int> indiv)
 {
-    for (unsigned int indiv = 0; indiv < individuals.size(); ++indiv)
+    for (unsigned int pos = 0; pos < indiv.size(); ++pos)
     {
-        for (unsigned int allele = 0; allele < this->individualSize; ++allele)
+        cout << indiv.at(pos) << " ";
+    }
+
+    cout << endl;
+}
+
+void Population::show(vector<vector<int>> generation)
+{
+    for (unsigned int indiv = 0; indiv < generation.size(); ++indiv)
+    {
+        for (unsigned int allele = 0; allele < generation.at(0).size(); ++allele)
         {
-            cout << individuals.at(indiv).at(allele) << " ";
+            cout << generation.at(indiv).at(allele) << " ";
         }
 
         cout << endl;
     }
 }
+
+void Population::show()
+{
+    this->show(individuals);
+}
+
 void Population::showDescendants()
 {
     for (unsigned int indiv = 0; indiv < descendants.size(); ++indiv)
