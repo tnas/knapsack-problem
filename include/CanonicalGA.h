@@ -28,9 +28,10 @@ class CanonicalGA
         void setPopulation(Population population);
         void setGenerationsLimit(int limit);
         ExecutionReport executeEvolution();
+        void runFitnessEvaluation();
         void moderateGeneration(vector<vector<int>> &generation);
         void repairInfeasibleIndividual(vector<int> &indiv);
-        void penalizeInfeasibleIndividual(vector<int> indiv);
+        unsigned int penalizeInfeasibleIndividual(vector<int> indiv);
 };
 
 #endif // AGCANONICO_H

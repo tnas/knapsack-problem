@@ -12,7 +12,7 @@ int main()
 {
     Knapsack knapsack;
     Population population;
-    CanonicalGA canonicalGA(knapsack, population, InfeasiblesPolicy::Repair);
+    CanonicalGA canonicalGA(knapsack, population, InfeasiblesPolicy::Penalize);
 
     ExecutionReport report = canonicalGA.executeEvolution();
     report.print();

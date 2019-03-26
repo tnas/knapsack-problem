@@ -68,20 +68,20 @@
 1553604705 source:/home/thiago/projects/knapsack-problem/src/Fitness.cpp
 	"Fitness.h"
 
-1553612688 source:c:\users\140688330213\documents\my-systems\knapsack-problem\main.cpp
+1553622852 source:c:\users\140688330213\documents\my-systems\knapsack-problem\main.cpp
 	<iostream>
 	"include/CanonicalGA.h"
 	"include/Knapsack.h"
 	"include/Population.h"
 
-1553620336 c:\users\140688330213\documents\my-systems\knapsack-problem\include\canonicalga.h
+1553626174 c:\users\140688330213\documents\my-systems\knapsack-problem\include\canonicalga.h
 	<vector>
 	"Knapsack.h"
 	"Population.h"
 	<Fitness.h>
 	<ExecutionReport.h>
 
-1553620340 c:\users\140688330213\documents\my-systems\knapsack-problem\include\knapsack.h
+1553626180 c:\users\140688330213\documents\my-systems\knapsack-problem\include\knapsack.h
 
 1553618342 c:\users\140688330213\documents\my-systems\knapsack-problem\include\population.h
 	<vector>
@@ -91,11 +91,12 @@
 
 1553612206 c:\users\140688330213\documents\my-systems\knapsack-problem\include\executionreport.h
 
-1553620263 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\canonicalga.cpp
+1553625359 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\canonicalga.cpp
 	"../include/CanonicalGA.h"
 	<RandomGeneratorHelper.h>
 	<iostream>
 	<vector>
+	<cstdlib>
 
 1553612206 c:\users\140688330213\documents\my-systems\knapsack-problem\include\randomgeneratorhelper.h
 
@@ -106,10 +107,10 @@
 1553617029 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\fitness.cpp
 	"Fitness.h"
 
-1553616666 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\knapsack.cpp
+1553621614 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\knapsack.cpp
 	"../include/Knapsack.h"
 
-1553618499 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\population.cpp
+1553620753 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\population.cpp
 	"../include/Population.h"
 	<stdlib.h>
 	<stdint.h>

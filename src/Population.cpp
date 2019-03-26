@@ -155,6 +155,7 @@ void Population::shrink(int selecteds[])
     this->join();
 }
 
+// TODO: Fix the memory leak related to indiv heap allocation
 unsigned int* Population::selectIndividual(unsigned int chromosome)
 {
     unsigned int* indiv = new unsigned int[this->individualSize]();

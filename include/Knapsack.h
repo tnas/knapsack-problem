@@ -18,6 +18,7 @@ class Knapsack
         int getItemWeight(int item);
         int getItemValue(int item);
         unsigned int getCapacity();
+        unsigned int getMaximumWeight();
         void setCapacity(unsigned int capacity);
 
     protected:

@@ -53,6 +53,16 @@ bool Knapsack::isFeasible(unsigned int* instance, unsigned int size)
     return evaluateWeight(instance, size) <= this->capacity;
 }
 
+unsigned int Knapsack::getMaximumWeight()
+{
+    unsigned int maxWeight = 0;
+
+    for (unsigned int pos = 0; pos < NUM_ITENS; ++pos)
+        maxWeight += itensWeight[pos];
+
+    return maxWeight;
+}
+
 int Knapsack::getItemWeight(int item)
 {
     return itensWeight[item];

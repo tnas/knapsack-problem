@@ -2,6 +2,7 @@
 #include <RandomGeneratorHelper.h>
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 
@@ -47,24 +48,56 @@ void evaluateFitnessOld(Population population, Knapsack knapsack)
     }
 }
 
-void evaluateFitness(Population population, Knapsack knapsack)
+bool isKnapsackFeasible(vector<int> indiv, Knapsack knapsack)
+{
+    bool isFeasible = false;
+    unsigned int instanceSize = indiv.size();
+
+    unsigned int* instance = new unsigned int[instanceSize]();
+    for (unsigned int pos = 0; pos < instanceSize; ++ pos)
+    {
+        instance[pos] = indiv.at(pos);
+    }
+
+    isFeasible = knapsack.isFeasible(instance, instanceSize);
+
+    delete(instance);
+
+    return isFeasible;
+}
+
+void CanonicalGA::runFitnessEvaluation()
 {
     fitnessStatus.clear();
-    int populationSize = population.getCurrentSize();
-    unsigned int value, weight;
-    unsigned int instanceSize = population.getIndividualSize();
+    int populationSize = this->population.getCurrentSize();
+    unsigned int instanceSize = this->population.getIndividualSize();
+    unsigned weight;
+    int value;
+    vector<int> individual;
 
     unsigned int* instance = new unsigned int[instanceSize]();
 
     for (int indiv = 0; indiv < populationSize; ++indiv)
     {
-        for (unsigned int item = 0; item < population.getIndividualSize(); ++item)
+        individual = this->population.getIndividual(indiv);
+
+        for (unsigned int item = 0; item < instanceSize; ++item)
         {
-            instance[item] = population.getIndividual(indiv).at(item);
+            instance[item] = individual.at(item);
         }
 
-        value  = knapsack.evaluateValue(instance, instanceSize);
-        weight = knapsack.evaluateWeight(instance, instanceSize);
+        value  = this->knapsack.evaluateValue(instance, instanceSize);
+        weight = this->knapsack.evaluateWeight(instance, instanceSize);
+
+        if (this->infeasiblesPolicy == InfeasiblesPolicy::Penalize &&
+            (!isKnapsackFeasible(individual, knapsack)))
+        {
+            //cout << "Original value: " << value;
+            value -= this->penalizeInfeasibleIndividual(individual);
+            value = value >= 0 ? value : 0;
+            //cout << " Penalized value: " << value << endl;
+        }
+
         fitnessStatus.push_back(Fitness(indiv, value, weight));
     }
 
@@ -115,24 +148,6 @@ int runRouletteWhellSelection()
     return ithIndiv;
 }
 
-bool isKnapsackFeasible(vector<int> indiv, Knapsack knapsack)
-{
-    bool isFeasible = false;
-    unsigned int instanceSize = indiv.size();
-
-    unsigned int* instance = new unsigned int[instanceSize]();
-    for (unsigned int pos = 0; pos < instanceSize; ++ pos)
-    {
-        instance[pos] = indiv.at(pos);
-    }
-
-    isFeasible = knapsack.isFeasible(instance, instanceSize);
-
-    delete(instance);
-
-    return isFeasible;
-}
-
 void CanonicalGA::moderateGeneration(vector<vector<int>> &generation)
 {
     vector<vector<int>>::iterator it;
@@ -147,10 +162,6 @@ void CanonicalGA::moderateGeneration(vector<vector<int>> &generation)
                 this->repairInfeasibleIndividual(*it);
             }
         }
-    }
-    else
-    {
-
     }
 }
 
@@ -200,10 +211,24 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int> &indiv)
     //cout << "After reparing: ";
     //this->population.showIndividual(indiv);
 }
-
-void CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)
+/**
+ * The implemented penalty function was based on:
+ * https://www.dataminingapps.com/2017/03/solving-the-knapsack-problem-with-a-simple-genetic-algorithm/
+ */
+unsigned int CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)
 {
+    vector<int>::iterator it;
+    unsigned int indivWeight, pos;
 
+    indivWeight = pos = 0;
+
+    for (it = indiv.begin(); it != indiv.end(); ++it, ++pos)
+    {
+        indivWeight += this->knapsack.getItemWeight(pos) * (*it);
+    }
+
+    return this->knapsack.getMaximumWeight() *
+        abs(indivWeight - this->knapsack.getCapacity());
 }
 
 ExecutionReport CanonicalGA::executeEvolution()
@@ -224,7 +249,7 @@ ExecutionReport CanonicalGA::executeEvolution()
 //    cout << "Repaired Population: " << endl;
 //    this->population.show();
 
-    evaluateFitness(this->population, this->knapsack);
+    this->runFitnessEvaluation();
 
 //    cout << "Fitness: " << endl;
 //    printFitness(this->population);
@@ -254,21 +279,6 @@ ExecutionReport CanonicalGA::executeEvolution()
             generation = this->population.reproduce(stIndiv, ndIndiv);
             this->moderateGeneration(generation);
             this->population.addIndividuals(generation);
-
-            while (!generation.empty())
-            {
-                vector<int> child = generation.back();
-                generation.pop_back();
-
-                if (isKnapsackFeasible(child, this->knapsack))
-                {
-                    this->population.addIndividual(child);
-                }
-                else
-                {
-                    //cout << "Child is not feasible!" << endl;
-                }
-            }
         }
 
         //cout << "Descendants: " << endl;
@@ -276,7 +286,7 @@ ExecutionReport CanonicalGA::executeEvolution()
 
         //this->population.join();
 
-        evaluateFitness(this->population, this->knapsack);
+        this->runFitnessEvaluation();
         //cout << "Fitness: " << endl;
         //printFitness(this->population);
 
