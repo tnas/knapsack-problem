@@ -21,9 +21,10 @@ class Population
         Population();
         Population(int threshold, int offspringSize);
         virtual ~Population();
-        void create(int individualSize);
+        vector<vector<int>> create(int individualSize);
         vector<vector<int>> reproduce(int first, int second);
         void addIndividual(vector<int> individual);
+        void addIndividuals(vector<vector<int>> indivs);
         vector<int> getIndividual(unsigned int id);
         void join();
         void shrink(int selecteds[]);

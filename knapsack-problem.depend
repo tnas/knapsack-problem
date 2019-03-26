@@ -16,7 +16,7 @@
 
 1553603638 /home/thiago/projects/knapsack-problem/include/Knapsack.h
 
-1553604312 /home/thiago/projects/knapsack-problem/include/Population.h
+1553606725 /home/thiago/projects/knapsack-problem/include/Population.h
 	<vector>
 
 1553603691 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
@@ -43,7 +43,8 @@
 	<time.h>
 	<stdlib.h>
 
-1553602719 /home/thiago/projects/knapsack-problem/include/CanonicalGA.h
+1553607740 /home/thiago/projects/knapsack-problem/include/CanonicalGA.h
+	<vector>
 	"Knapsack.h"
 	"Population.h"
 	<Fitness.h>

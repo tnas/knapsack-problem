@@ -14,7 +14,7 @@ CanonicalGA::CanonicalGA()
     this->generationsLimit = MAX_GENERATIONS;
 }
 
-CanonicalGA::CanonicalGA(Knapsack knapsack, Population population)
+CanonicalGA::CanonicalGA(Knapsack knapsack, Population population, InfeasiblesModeration moderation)
 {
     this->knapsack = knapsack;
     this->population = population;
@@ -133,12 +133,22 @@ bool isKnapsackFeasible(vector<int> indiv, Knapsack knapsack)
 }
 
 
+void moderateGeneration()
+{
+
+}
+
+
 ExecutionReport CanonicalGA::executeEvolution()
 {
-    //this->population.create(this->knapsack.getMaxNumberOfItens());
+    vector<vector<int>> generation;
+    vector<vector<int>>::iterator itChild;
+    //generation = this->population.create(this->knapsack.getMaxNumberOfItens());
 
     this->population.setThreshold(5);
-    this->population.create(5);
+    generation = this->population.create(5);
+
+
 
     evaluateFitness(this->population, this->knapsack);
 
@@ -146,18 +156,19 @@ ExecutionReport CanonicalGA::executeEvolution()
     cout << "Fitness: " << endl;
     printFitness(this->population);
 
-    int generation = 0;
+    int generationNumber = 0;
     int stIndiv, ndIndiv;
     int selecteds[this->population.getThreshold()];
 
     unsigned int* bestChromosome;
     unsigned int bestFitnessValue = 0;
     Fitness bestFromGeneration;
-    vector<vector<int>> children;
 
-    while (generation < MAX_GENERATIONS)
+    while (generationNumber < MAX_GENERATIONS)
     {
         //cout << "runRouletteWhellSelection" << endl;
+        generation.clear();
+
         for (unsigned int select = 0; select < this->population.getOffspringSize(); select+=2)
         {
             do
@@ -167,12 +178,12 @@ ExecutionReport CanonicalGA::executeEvolution()
             } while (stIndiv == ndIndiv);
 
             //cout << "st: " << stIndiv << " nd: " << ndIndiv << endl;
-            children = this->population.reproduce(stIndiv, ndIndiv);
+            generation = this->population.reproduce(stIndiv, ndIndiv);
 
-            while (!children.empty())
+            while (!generation.empty())
             {
-                vector<int> child = children.back();
-                children.pop_back();
+                vector<int> child = generation.back();
+                generation.pop_back();
 
                 if (isKnapsackFeasible(child, this->knapsack))
                 {
@@ -227,16 +238,26 @@ ExecutionReport CanonicalGA::executeEvolution()
 
         //this->population.showDescendants();
         //cout << "generation " << generation << endl;
-        ++generation;
+        ++generationNumber;
     }
 
     report.setChromosome(bestChromosome, this->population.getIndividualSize());
     report.setFitnessValue(bestFitnessValue);
     report.setKnapsackWeight(this->knapsack.evaluateWeight(bestChromosome,
         this->population.getIndividualSize()));
-    report.setNumberOfGenerations(generation);
+    report.setNumberOfGenerations(generationNumber);
 
     return report;
+}
+
+void CanonicalGA::repairInfeasibleIndividual(vector<int> indiv)
+{
+
+}
+
+void CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)
+{
+
 }
 
 void CanonicalGA::setKnapsack(Knapsack knapsack)

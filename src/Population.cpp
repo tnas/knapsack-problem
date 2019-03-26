@@ -35,9 +35,10 @@ void Population::setOffspringSize(int size)
     this->offspringSize = size;
 }
 
-void Population::create(int individualSize)
+vector<vector<int>> Population::create(int individualSize)
 {
     this->individualSize = individualSize;
+    vector<vector<int>> firstGeneration;
 
     for (unsigned int indiv = 0; indiv < this->threshold; ++indiv)
     {
@@ -49,8 +50,11 @@ void Population::create(int individualSize)
             individual.push_back(randomHelper.getRandomBetweenZeroTo(1));
         }
 
-        individuals.push_back(individual);
+        //individuals.push_back(individual);
+        firstGeneration.push_back(individual);
     }
+
+    return firstGeneration;
 }
 
 void makeMutation(vector<int> individual, int allele)
@@ -120,6 +124,11 @@ vector<vector<int>> Population::reproduce(int first, int second)
 void Population::addIndividual(vector<int> individual)
 {
     individuals.push_back(individual);
+}
+
+void Population::addIndividuals(vector<vector<int>>indivs)
+{
+    individuals.insert(end(individuals), begin(indivs), end(indivs));
 }
 
 vector<int> Population::getIndividual(unsigned int id)
