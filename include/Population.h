@@ -3,29 +3,34 @@
 
 #define CROSSOVER_PROBABILITY 0.8
 #define MUTATION_PROPABILITY  0.05
-#define DEFAULT_SIZE 10
+#define DEFAULT_THRESHOLD 10
 
 class Population
 {
-    int size;
-    int offspringSize;
-    int individualSize;
+    unsigned int threshold;
+    unsigned int offspringSize;
+    unsigned int individualSize;
     float crossoverProbability;
     float mutationProbaility;
 
     public:
         Population();
-        Population(int size, int offspringSize);
+        Population(int threshold, int offspringSize);
         virtual ~Population();
         void create(int individualSize);
-        void makeCrossover(int first, int second);
-        void setSize(int size);
+        void reproduce(int first, int second);
+        void join();
+        void shrink(int selecteds[]);
+        unsigned int* selectIndividual(unsigned int chromosome);
+        void setThreshold(int size);
         void setOffspringSize(int size);
-        int getIndividualSize();
-        int getOffspringSize();
+        unsigned int getIndividualSize();
+        unsigned int getOffspringSize();
         int getAllele(int individual, int position);
-        int getSize();
+        unsigned int getThreshold();
+        int getCurrentSize();
         void show();
+        void showDescendants();
 };
 
 #endif // POPULATION_H

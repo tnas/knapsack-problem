@@ -1,29 +1,26 @@
 #include "../include/Population.h"
 #include <vector>
 #include <stdlib.h>
-#include <time.h>
 #include <stdint.h>
 #include <iostream>
 #include "../include/RandomGeneratorHelper.h"
 
-#define RANDOM_UPPERBOUND 2
-
 using namespace std;
 
-vector<vector<int>> individuals;
-RandomGeneratorHelper randomHelper;
+static vector<vector<int>> individuals;
+static vector<vector<int>> descendants;
+static RandomGeneratorHelper randomHelper;
 
 Population::Population()
 {
-    this->size = this->offspringSize = DEFAULT_SIZE;
+    this->threshold = this->offspringSize = DEFAULT_THRESHOLD;
     this->crossoverProbability = CROSSOVER_PROBABILITY;
     this->mutationProbaility   = MUTATION_PROPABILITY;
-    srand(time(NULL));
 }
 
-Population::Population(int size, int offspringSize)
+Population::Population(int threshold, int offspringSize)
 {
-    this->size = size;
+    this->threshold = threshold;
     this->offspringSize = offspringSize;
 }
 
@@ -31,9 +28,9 @@ Population::~Population()
 {
 }
 
-void Population::setSize(int size)
+void Population::setThreshold(int size)
 {
-    this->size = size;
+    this->threshold = size;
 }
 
 void Population::setOffspringSize(int size)
@@ -45,58 +42,145 @@ void Population::create(int individualSize)
 {
     this->individualSize = individualSize;
 
-    for (int indiv = 0; indiv < this->size; ++indiv)
+    for (unsigned int indiv = 0; indiv < this->threshold; ++indiv)
     {
         vector<int> individual;
 
-        for (int allele = 0; allele < this->individualSize; ++allele)
+        for (unsigned int allele = 0; allele < this->individualSize; ++allele)
         {
-            individual.push_back(rand() % RANDOM_UPPERBOUND);
+            //individual.push_back(rand() % RANDOM_UPPERBOUND);
+            individual.push_back(randomHelper.getRandomBetweenZeroTo(1));
         }
+
         individuals.push_back(individual);
     }
 }
 
-void Population::makeCrossover(int first, int second)
+void makeMutation(vector<int> individual, int allele)
 {
-    int crossoverPoint = randomHelper.getRandomFromZero(this->individualSize);
-    int alleleTemp;
-
-    for (int allele = crossoverPoint; allele < this->individualSize; ++allele)
-    {
-        alleleTemp = individuals.at(first).at(allele);
-        individuals.at(first).at(allele) = individuals.at(second).at(allele);
-        individuals.at(second).at(allele) = alleleTemp;
-    }
+    if (randomHelper.getRandomBetween0and1() < MUTATION_PROPABILITY)
+        individual.at(allele) ^= 1;
 }
+
+bool isAlleleExchangeable()
+{
+    return randomHelper.getRandomBetween0and1() < CROSSOVER_PROBABILITY;
+}
+
+void Population::reproduce(int first, int second)
+{
+    unsigned int crossoverPoint = randomHelper.getRandomBetweenZeroTo(this->individualSize);
+    unsigned int allele, stParent, ndParent;
+
+    vector<int> stChild, ndChild;
+
+    for (allele = 0; allele < crossoverPoint; ++allele)
+    {
+        stChild.push_back(individuals.at(first).at(allele));
+        makeMutation(stChild, allele);
+
+        ndChild.push_back(individuals.at(second).at(allele));
+        makeMutation(ndChild, allele);
+    }
+
+    if (isAlleleExchangeable())
+    {
+        stParent = second;
+        ndParent = first;
+    }
+    else
+    {
+        stParent = first;
+        ndParent = second;
+    }
+
+    for (allele = crossoverPoint; allele < this->individualSize; ++allele)
+    {
+        stChild.push_back(individuals.at(stParent).at(allele));
+        makeMutation(stChild, allele);
+
+        ndChild.push_back(individuals.at(ndParent).at(allele));
+        makeMutation(ndChild, allele);
+    }
+
+    descendants.push_back(stChild);
+    descendants.push_back(ndChild);
+}
+
+void Population::join()
+{
+    individuals.insert(end(individuals), begin(descendants), end(descendants));
+}
+
+void Population::shrink(int selecteds[])
+{
+    descendants.clear();
+
+    for (unsigned int pos = 0; pos < this->threshold; ++pos)
+    {
+        descendants.push_back(individuals.at(selecteds[pos]));
+    }
+
+    individuals.clear();
+    this->join();
+}
+
 
 int Population::getAllele(int individual, int position)
 {
     return individuals.at(individual).at(position);
 }
 
-int Population::getIndividualSize()
+unsigned int Population::getIndividualSize()
 {
     return this->individualSize;
 }
 
-int Population::getSize()
+unsigned int Population::getThreshold()
 {
-    return this->size;
+    return this->threshold;
 }
 
-int Population::getOffspringSize()
+unsigned int Population::getOffspringSize()
 {
     return this->offspringSize;
 }
 
+int Population::getCurrentSize()
+{
+    return individuals.size();
+
+}
+unsigned int* Population::selectIndividual(unsigned int chromosome)
+{
+    unsigned int* indiv = new unsigned int[this->individualSize]();
+    for (unsigned int allel = 0; allel < this->individualSize; ++ allel)
+    {
+        indiv[allel] = individuals.at(chromosome).at(allel);
+    }
+
+    return indiv;
+}
+
 void Population::show()
 {
-    for (int indiv = 0; indiv < this->size; ++indiv)
+    for (unsigned int indiv = 0; indiv < individuals.size(); ++indiv)
     {
-        for (int allele = 0; allele < this->individualSize; ++allele)
+        for (unsigned int allele = 0; allele < this->individualSize; ++allele)
         {
             cout << individuals.at(indiv).at(allele) << " ";
+        }
+
+        cout << endl;
+    }
+}
+void Population::showDescendants()
+{
+    for (unsigned int indiv = 0; indiv < descendants.size(); ++indiv)
+    {
+        for (unsigned int allele = 0; allele < this->individualSize; ++allele)
+        {
+            cout << descendants.at(indiv).at(allele) << " ";
         }
 
         cout << endl;

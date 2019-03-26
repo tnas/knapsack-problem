@@ -1,5 +1,5 @@
 #include <iostream>
-#include "include/AGCanonico.h"
+#include "include/CanonicalGA.h"
 #include "include/Knapsack.h"
 #include "include/Population.h"
 
@@ -12,11 +12,10 @@ int main()
 {
     Knapsack knapsack;
     Population population;
-    AGCanonico agCanonico(knapsack, population);
+    CanonicalGA canonicalGA(knapsack, population);
 
-    agCanonico.executeEvolution();
-
-    cout << "Hello world!" << endl;
+    ExecutionReport report = canonicalGA.executeEvolution();
+    report.print();
 
     return 0;
 }

@@ -7,7 +7,8 @@ class RandomGeneratorHelper
     public:
         RandomGeneratorHelper();
         virtual ~RandomGeneratorHelper();
-        int getRandomFromZero(int max);
+        unsigned int getRandomBetweenZeroTo(int max);
+        double getRandomBetween0and1();
 };
 
 #endif // RANDOMGENERATORHELPER_H
