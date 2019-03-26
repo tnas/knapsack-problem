@@ -1,11 +1,8 @@
 #include "../include/Population.h"
-#include <vector>
 #include <stdlib.h>
 #include <stdint.h>
 #include <iostream>
 #include "../include/RandomGeneratorHelper.h"
-
-using namespace std;
 
 static vector<vector<int>> individuals;
 static vector<vector<int>> descendants;
@@ -67,11 +64,12 @@ bool isAlleleExchangeable()
     return randomHelper.getRandomBetween0and1() < CROSSOVER_PROBABILITY;
 }
 
-void Population::reproduce(int first, int second)
+vector<vector<int>> Population::reproduce(int first, int second)
 {
     unsigned int crossoverPoint = randomHelper.getRandomBetweenZeroTo(this->individualSize);
     unsigned int allele, stParent, ndParent;
 
+    vector<vector<int>> generation;
     vector<int> stChild, ndChild;
 
     for (allele = 0; allele < crossoverPoint; ++allele)
@@ -103,9 +101,32 @@ void Population::reproduce(int first, int second)
         makeMutation(ndChild, allele);
     }
 
-    descendants.push_back(stChild);
-    descendants.push_back(ndChild);
+
+//    unsigned int* indiv = new unsigned int[this->individualSize]();
+//    for (unsigned int allel = 0; allel < this->individualSize; ++ allel)
+//    {
+//        indiv[allel] = individuals.at(chromosome).at(allel);
+//    }
+
+    generation.push_back(stChild);
+    generation.push_back(ndChild);
+
+//    descendants.push_back(stChild);
+//    descendants.push_back(ndChild);
+
+    return generation;
 }
+
+void Population::addIndividual(vector<int> individual)
+{
+    individuals.push_back(individual);
+}
+
+vector<int> Population::getIndividual(unsigned int id)
+{
+    return individuals.at(id);
+}
+
 
 void Population::join()
 {
@@ -125,6 +146,16 @@ void Population::shrink(int selecteds[])
     this->join();
 }
 
+unsigned int* Population::selectIndividual(unsigned int chromosome)
+{
+    unsigned int* indiv = new unsigned int[this->individualSize]();
+    for (unsigned int allel = 0; allel < this->individualSize; ++ allel)
+    {
+        indiv[allel] = individuals.at(chromosome).at(allel);
+    }
+
+    return indiv;
+}
 
 int Population::getAllele(int individual, int position)
 {
@@ -149,17 +180,6 @@ unsigned int Population::getOffspringSize()
 int Population::getCurrentSize()
 {
     return individuals.size();
-
-}
-unsigned int* Population::selectIndividual(unsigned int chromosome)
-{
-    unsigned int* indiv = new unsigned int[this->individualSize]();
-    for (unsigned int allel = 0; allel < this->individualSize; ++ allel)
-    {
-        indiv[allel] = individuals.at(chromosome).at(allel);
-    }
-
-    return indiv;
 }
 
 void Population::show()

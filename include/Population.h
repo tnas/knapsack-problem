@@ -1,9 +1,13 @@
 #ifndef POPULATION_H
 #define POPULATION_H
 
+#include <vector>
+
 #define CROSSOVER_PROBABILITY 0.8
 #define MUTATION_PROPABILITY  0.05
 #define DEFAULT_THRESHOLD 10
+
+using namespace std;
 
 class Population
 {
@@ -18,7 +22,9 @@ class Population
         Population(int threshold, int offspringSize);
         virtual ~Population();
         void create(int individualSize);
-        void reproduce(int first, int second);
+        vector<vector<int>> reproduce(int first, int second);
+        void addIndividual(vector<int> individual);
+        vector<int> getIndividual(unsigned int id);
         void join();
         void shrink(int selecteds[]);
         unsigned int* selectIndividual(unsigned int chromosome);

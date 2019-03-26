@@ -1,7 +1,7 @@
 #ifndef AGCANONICO_H
 #define AGCANONICO_H
 
-#define MAX_GENERATIONS 10
+#define MAX_GENERATIONS 1
 
 #include "Knapsack.h"
 #include "Population.h"

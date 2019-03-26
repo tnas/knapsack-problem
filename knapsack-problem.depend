@@ -14,16 +14,16 @@
 	"Knapsack.h"
 	"Population.h"
 
-1553282073 /home/thiago/projects/knapsack-problem/include/Knapsack.h
+1553603638 /home/thiago/projects/knapsack-problem/include/Knapsack.h
 
-1553538251 /home/thiago/projects/knapsack-problem/include/Population.h
+1553604312 /home/thiago/projects/knapsack-problem/include/Population.h
+	<vector>
 
-1553518006 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
+1553603691 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
 	"../include/Knapsack.h"
 
-1553539212 source:/home/thiago/projects/knapsack-problem/src/Population.cpp
+1553604373 source:/home/thiago/projects/knapsack-problem/src/Population.cpp
 	"../include/Population.h"
-	<vector>
 	<stdlib.h>
 	<stdint.h>
 	<iostream>
@@ -43,27 +43,27 @@
 	<time.h>
 	<stdlib.h>
 
-1553543562 /home/thiago/projects/knapsack-problem/include/CanonicalGA.h
+1553602719 /home/thiago/projects/knapsack-problem/include/CanonicalGA.h
 	"Knapsack.h"
 	"Population.h"
 	<Fitness.h>
 	<ExecutionReport.h>
 
-1553540709 /home/thiago/projects/knapsack-problem/include/Fitness.h
+1553604662 /home/thiago/projects/knapsack-problem/include/Fitness.h
 	<algorithm>
 
-1553539863 /home/thiago/projects/knapsack-problem/include/ExecutionReport.h
+1553602026 /home/thiago/projects/knapsack-problem/include/ExecutionReport.h
 
-1553595033 source:/home/thiago/projects/knapsack-problem/src/CanonicalGA.cpp
+1553604808 source:/home/thiago/projects/knapsack-problem/src/CanonicalGA.cpp
 	"../include/CanonicalGA.h"
 	<RandomGeneratorHelper.h>
 	<iostream>
 	<vector>
 
-1553539904 source:/home/thiago/projects/knapsack-problem/src/ExecutionReport.cpp
+1553602580 source:/home/thiago/projects/knapsack-problem/src/ExecutionReport.cpp
 	"ExecutionReport.h"
 	<iostream>
 
-1553542187 source:/home/thiago/projects/knapsack-problem/src/Fitness.cpp
+1553604705 source:/home/thiago/projects/knapsack-problem/src/Fitness.cpp
 	"Fitness.h"
 

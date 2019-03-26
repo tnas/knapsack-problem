@@ -1,20 +1,23 @@
 #ifndef KNAPSACK_H
 #define KNAPSACK_H
 
-#define DEFAULT_CAPACITY 120
+#define DEFAULT_CAPACITY 12
 
 class Knapsack
 {
-    int capacity;
+    unsigned int capacity;
 
     public:
         Knapsack();
-        Knapsack(int capacity);
+        Knapsack(unsigned int capacity);
         virtual ~Knapsack();
+        bool isFeasible(unsigned int* instance, unsigned int size);
+        unsigned int evaluateWeight(unsigned int* instance, unsigned int size);
+        unsigned int evaluateValue(unsigned int* instance, unsigned int size);
         int getMaxNumberOfItens();
         int getItemWeight(int item);
         int getItemValue(int item);
-        void setCapacity(int capacity);
+        void setCapacity(unsigned int capacity);
 
     protected:
 

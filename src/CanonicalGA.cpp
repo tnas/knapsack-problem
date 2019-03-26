@@ -25,7 +25,7 @@ CanonicalGA::~CanonicalGA()
     fitnessStatus.clear();
 }
 
-void evaluateFitness(Population population, Knapsack knapsack)
+void evaluateFitnessOld(Population population, Knapsack knapsack)
 {
     fitnessStatus.clear();
     int populationSize = population.getCurrentSize();
@@ -44,6 +44,30 @@ void evaluateFitness(Population population, Knapsack knapsack)
 
         fitnessStatus.push_back(Fitness(indiv, value));
     }
+}
+
+void evaluateFitness(Population population, Knapsack knapsack)
+{
+    fitnessStatus.clear();
+    int populationSize = population.getCurrentSize();
+    unsigned int value, weight;
+    unsigned int instanceSize = population.getIndividualSize();
+
+    unsigned int* instance = new unsigned int[instanceSize]();
+
+    for (int indiv = 0; indiv < populationSize; ++indiv)
+    {
+        for (unsigned int item = 0; item < population.getIndividualSize(); ++item)
+        {
+            instance[item] = population.getIndividual(indiv).at(item);
+        }
+
+        value  = knapsack.evaluateValue(instance, instanceSize);
+        weight = knapsack.evaluateWeight(instance, instanceSize);
+        fitnessStatus.push_back(Fitness(indiv, value, weight));
+    }
+
+    delete(instance);
 }
 
 void printFitness(Population population)
@@ -90,18 +114,37 @@ int runRouletteWhellSelection()
     return ithIndiv;
 }
 
+bool isKnapsackFeasible(vector<int> indiv, Knapsack knapsack)
+{
+    bool isFeasible = false;
+    unsigned int instanceSize = indiv.size();
+
+    unsigned int* instance = new unsigned int[instanceSize]();
+    for (unsigned int pos = 0; pos < instanceSize; ++ pos)
+    {
+        instance[pos] = indiv.at(pos);
+    }
+
+    isFeasible = knapsack.isFeasible(instance, instanceSize);
+
+    delete(instance);
+
+    return isFeasible;
+}
+
+
 ExecutionReport CanonicalGA::executeEvolution()
 {
-    this->population.create(this->knapsack.getMaxNumberOfItens());
+    //this->population.create(this->knapsack.getMaxNumberOfItens());
 
-    //this->population.setThreshold(5);
-    //this->population.create(5);
+    this->population.setThreshold(5);
+    this->population.create(5);
 
     evaluateFitness(this->population, this->knapsack);
 
     //this->population.show();
-    ////cout << "Fitness: " << endl;
-    //printFitness(this->population);
+    cout << "Fitness: " << endl;
+    printFitness(this->population);
 
     int generation = 0;
     int stIndiv, ndIndiv;
@@ -110,6 +153,7 @@ ExecutionReport CanonicalGA::executeEvolution()
     unsigned int* bestChromosome;
     unsigned int bestFitnessValue = 0;
     Fitness bestFromGeneration;
+    vector<vector<int>> children;
 
     while (generation < MAX_GENERATIONS)
     {
@@ -123,13 +167,28 @@ ExecutionReport CanonicalGA::executeEvolution()
             } while (stIndiv == ndIndiv);
 
             //cout << "st: " << stIndiv << " nd: " << ndIndiv << endl;
-            this->population.reproduce(stIndiv, ndIndiv);
+            children = this->population.reproduce(stIndiv, ndIndiv);
+
+            while (!children.empty())
+            {
+                vector<int> child = children.back();
+                children.pop_back();
+
+                if (isKnapsackFeasible(child, this->knapsack))
+                {
+                    this->population.addIndividual(child);
+                }
+                else
+                {
+                    cout << "Child is not feasible!" << endl;
+                }
+            }
         }
 
         //cout << "Descendants: " << endl;
         //this->population.showDescendants();
 
-        this->population.join();
+        //this->population.join();
 
         evaluateFitness(this->population, this->knapsack);
         //cout << "Fitness: " << endl;
@@ -173,6 +232,8 @@ ExecutionReport CanonicalGA::executeEvolution()
 
     report.setChromosome(bestChromosome, this->population.getIndividualSize());
     report.setFitnessValue(bestFitnessValue);
+    report.setKnapsackWeight(this->knapsack.evaluateWeight(bestChromosome,
+        this->population.getIndividualSize()));
     report.setNumberOfGenerations(generation);
 
     return report;

@@ -19,13 +19,38 @@ Knapsack::Knapsack()
     this->capacity = DEFAULT_CAPACITY;
 }
 
-Knapsack::Knapsack(int capacity)
+Knapsack::Knapsack(unsigned int capacity)
 {
     this->capacity = capacity;
 }
 
 Knapsack::~Knapsack()
 {
+}
+
+unsigned int Knapsack::evaluateWeight(unsigned int* instance, unsigned int size)
+{
+    unsigned int totalWeight = 0;
+
+    for (unsigned int pos = 0; pos < size; ++pos)
+        totalWeight += instance[pos] * itensWeight[pos];
+
+    return totalWeight;
+}
+
+unsigned int Knapsack::evaluateValue(unsigned int* instance, unsigned int size)
+{
+    unsigned int totalValue = 0;
+
+    for (unsigned int pos = 0; pos < size; ++pos)
+        totalValue += instance[pos] * itensValue[pos];
+
+    return totalValue;
+}
+
+bool Knapsack::isFeasible(unsigned int* instance, unsigned int size)
+{
+    return evaluateWeight(instance, size) <= this->capacity;
 }
 
 int Knapsack::getItemWeight(int item)
@@ -43,7 +68,7 @@ int Knapsack::getMaxNumberOfItens()
     return NUM_ITENS;
 }
 
-void Knapsack::setCapacity(int capacity)
+void Knapsack::setCapacity(unsigned int capacity)
 {
     this->capacity = capacity;
 }

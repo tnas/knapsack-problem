@@ -42,6 +42,16 @@ void ExecutionReport::setNumberOfGenerations(unsigned int numberOfGenerations)
     this->numberOfGenerations = numberOfGenerations;
 }
 
+unsigned int ExecutionReport::getKnapsackWeight()
+{
+    return this->knapsackWeight;
+}
+
+void ExecutionReport::setKnapsackWeight(unsigned int weight)
+{
+    this->knapsackWeight = weight;
+}
+
 void ExecutionReport::print()
 {
     cout << "Best Chromosome:" << endl;
@@ -50,6 +60,7 @@ void ExecutionReport::print()
         cout << this->chromosome[pos] << " ";
     }
     cout << endl << "Fitness Value: " << this->fitnessValue << endl;
+    cout << "Knapsack Weight: " << this->knapsackWeight << endl;
     cout << "Number of Generations: " << this->numberOfGenerations << endl;
 }
 

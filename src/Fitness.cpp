@@ -3,11 +3,17 @@
 Fitness::Fitness()
 {
 }
-
 Fitness::Fitness(unsigned int chromosome, unsigned int value)
 {
     this->chromosome = chromosome;
     this->value = value;
+}
+
+Fitness::Fitness(unsigned int chromosome, unsigned int value, unsigned int weight)
+{
+    this->chromosome = chromosome;
+    this->value = value;
+    this->weight = weight;
 }
 
 Fitness::~Fitness()
@@ -43,4 +49,15 @@ unsigned int Fitness::getChromosome()
 {
     return this->chromosome;
 }
+
+void Fitness::setWeight(unsigned int weight)
+{
+    this->weight = weight;
+}
+
+unsigned int Fitness::getWeight()
+{
+    return this->weight;
+}
+
 
