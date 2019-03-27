@@ -1,28 +1,29 @@
 #ifndef EXECUTIONREPORT_H
 #define EXECUTIONREPORT_H
 
+#include <iostream>
+#include <vector>
+#include <Knapsack.h>
+
+using namespace std;
 
 class ExecutionReport
 {
     unsigned int chromosomeSize;
-    unsigned int* chromosome;
-    unsigned int fitnessValue;
-    unsigned int knapsackWeight;
-    unsigned int numberOfGenerations;
     unsigned int numberOfAllelesOn;
+    unsigned int* chromosome;
+    unsigned int numberOfGenerations;
+    Knapsack knapsack;
 
     public:
         ExecutionReport();
+        ExecutionReport(Knapsack knapsack, vector<int> chromosome);
         virtual ~ExecutionReport();
-        unsigned int* getChromosome();
         unsigned int getFitnessValue();
         unsigned int getNumberOfGenerations();
         unsigned int getKnapsackWeight();
         unsigned int getNumberOfAllelesOn();
-        void setChromosome(unsigned int* chromosome, unsigned int size);
-        void setFitnessValue(unsigned int fitnessValue);
         void setNumberOfGenerations(unsigned int numberOfGenerations);
-        void setKnapsackWeight(unsigned int weight);
         void print();
         void printCompactedFormat();
 };

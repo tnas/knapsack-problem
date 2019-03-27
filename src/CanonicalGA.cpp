@@ -3,12 +3,12 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include <cmath>
 
 using namespace std;
 
 static vector<Fitness> fitnessStatus;
 static RandomGeneratorHelper randomHelper;
-static ExecutionReport report;
 
 CanonicalGA::CanonicalGA()
 {
@@ -25,27 +25,6 @@ CanonicalGA::CanonicalGA(Knapsack knapsack, Population population, InfeasiblesPo
 CanonicalGA::~CanonicalGA()
 {
     fitnessStatus.clear();
-}
-
-void evaluateFitnessOld(Population population, Knapsack knapsack)
-{
-    fitnessStatus.clear();
-    int populationSize = population.getCurrentSize();
-    unsigned int value;
-
-    for (int indiv = 0; indiv < populationSize; ++indiv)
-    {
-        value = 0;
-
-        for (unsigned int item = 0; item < population.getIndividualSize(); ++item)
-        {
-
-            value += knapsack.getItemValue(item) *
-                population.getAllele(indiv, item);
-        }
-
-        fitnessStatus.push_back(Fitness(indiv, value));
-    }
 }
 
 bool isKnapsackFeasible(vector<int> indiv, Knapsack knapsack)
@@ -92,10 +71,10 @@ void CanonicalGA::runFitnessEvaluation()
         if (this->infeasiblesPolicy == InfeasiblesPolicy::Penalize &&
             (!isKnapsackFeasible(individual, knapsack)))
         {
-            //cout << "Original value: " << value;
+//            cout << "Original value and weight: " << value << "-" << weight;
             value -= this->penalizeInfeasibleIndividual(individual);
             value = value >= 0 ? value : 0;
-            //cout << " Penalized value: " << value << endl;
+//            cout << " Penalized value: " << value << endl;
         }
 
         fitnessStatus.push_back(Fitness(indiv, value, weight));
@@ -113,7 +92,7 @@ void printFitness(Population population)
     }
 }
 
-int runRouletteWhellSelection()
+int CanonicalGA::runRouletteWhellSelection()
 {
     double normFitness[fitnessStatus.size()];
     double factor, sum;
@@ -124,25 +103,20 @@ int runRouletteWhellSelection()
     sum = 0;
     for (Fitness fit : fitnessStatus)
          sum += fit.getValue();
-    //cout << "Sum: " << sum << " Factor: " << factor << endl;
 
     pos = 0;
     for (Fitness fit : fitnessStatus)
     {
         normFitness[pos++] = fit.getValue()/sum;
-        //cout << "Original value: " << fit.getValue() << " -- Normalized: " << normFitness[pos-1] << endl;
     }
-
 
     int ithIndiv = 0;
     sum = normFitness[0];
-    //cout << "Sum: " << sum << " ithIndiv: " << ithIndiv << endl;
 
     while (sum < factor)
     {
         ++ithIndiv;
         sum += normFitness[ithIndiv];
-        //cout << "Sum: " << sum << " ithIndiv: " << ithIndiv << endl;
     }
 
     return ithIndiv;
@@ -158,7 +132,6 @@ void CanonicalGA::moderateGeneration(vector<vector<int>> &generation)
         {
             if (!isKnapsackFeasible(*it, this->knapsack))
             {
-                //cout << "Individual is not feasible!" << endl;
                 this->repairInfeasibleIndividual(*it);
             }
         }
@@ -170,9 +143,6 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int> &indiv)
     vector<int>::iterator it;
     vector<Fitness> allelesEvaluation;
     unsigned int pos, value, weight, totalWeight;
-
-    //cout << "Before reparing: ";
-    //this->population.showIndividual(indiv);
 
     pos = totalWeight = 0;
 
@@ -207,28 +177,30 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int> &indiv)
         indiv.at(alleleFit.getId()) = 0;
         totalWeight -= alleleFit.getWeight();
     }
-
-    //cout << "After reparing: ";
-    //this->population.showIndividual(indiv);
 }
+
 /**
- * The implemented penalty function was based on:
- * https://www.dataminingapps.com/2017/03/solving-the-knapsack-problem-with-a-simple-genetic-algorithm/
+ * https://arxiv.org/pdf/1610.00976.pdf
  */
 unsigned int CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)
 {
     vector<int>::iterator it;
-    unsigned int indivWeight, pos;
+    unsigned int indivWeight, indivValue, pos;
 
-    indivWeight = pos = 0;
+    indivWeight = indivValue = pos = 0;
 
     for (it = indiv.begin(); it != indiv.end(); ++it, ++pos)
     {
         indivWeight += this->knapsack.getItemWeight(pos) * (*it);
+        indivValue += this->knapsack.getItemValue(pos) * (*it);
     }
 
-    //return abs(indivWeight - this->knapsack.getCapacity());
-    return this->knapsack.getCapacity();
+    double fIndivWeight = indivWeight;
+    double fIndivValue = indivValue;
+    double fCapacity = this->knapsack.getCapacity();
+    double normPenaltyFactor = 1.0-((double)(fIndivWeight/(fIndivWeight + fCapacity)));
+
+    return trunc(fIndivValue - (normPenaltyFactor * fIndivValue));
 }
 
 ExecutionReport CanonicalGA::executeEvolution()
@@ -257,14 +229,13 @@ ExecutionReport CanonicalGA::executeEvolution()
     int generationNumber = 0;
     int stIndiv, ndIndiv;
     int selecteds[this->population.getThreshold()];
-
-    unsigned int* bestChromosome;
+    unsigned int pos;
+    vector<int> bestChromosome;
     unsigned int bestFitnessValue = 0;
     Fitness bestFromGeneration;
 
     while (generationNumber < MAX_GENERATIONS)
     {
-        //cout << "runRouletteWhellSelection" << endl;
         generation.clear();
 
         for (unsigned int select = 0; select < this->population.getOffspringSize(); select+=2)
@@ -275,61 +246,40 @@ ExecutionReport CanonicalGA::executeEvolution()
                 ndIndiv = runRouletteWhellSelection();
             } while (stIndiv == ndIndiv);
 
-//            cout << "st: " << stIndiv << " nd: " << ndIndiv << endl;
             generation = this->population.reproduce(stIndiv, ndIndiv);
             this->moderateGeneration(generation);
             this->population.addIndividuals(generation);
         }
 
-//        cout << "Descendants: " << endl;
-        //this->population.showDescendants();
-
-        //this->population.join();
-
         this->runFitnessEvaluation();
-        //cout << "Fitness: " << endl;
-        //printFitness(this->population);
 
         sort(fitnessStatus.begin(), fitnessStatus.end(), greater<Fitness>());
 
-        //cout << "Sorted Fitness: " << endl;
-        //printFitness(this->population);
-
-        //cout << "Selected chromosomes: " << endl;
-        unsigned int pos = 0;
+        pos = 0;
         vector<Fitness>::iterator it;
         for (it = fitnessStatus.begin();
             it != fitnessStatus.end() && pos < this->population.getThreshold(); ++it)
         {
             selecteds[pos++] = it->getId();
-            //cout << "Chrome: " << it->getChromosome() << " Val: " << it->getValue() << endl;
         }
         fitnessStatus.erase(it, fitnessStatus.end());
-
-        //cout << "Fitness after shrinking population: " << endl;
-        //printFitness(this->population);
 
         bestFromGeneration = fitnessStatus.at(0);
 
         if (bestFromGeneration.getValue() > bestFitnessValue)
         {
-            bestChromosome = this->population.selectIndividual(bestFromGeneration.getId());
+            //bestChromosome = this->population.selectIndividual(bestFromGeneration.getId());
+            bestChromosome = this->population.getIndividual(bestFromGeneration.getId());
             bestFitnessValue = bestFromGeneration.getValue();
         }
 
         this->population.shrink(selecteds);
-        //cout << "Shrinked Population: " << endl;
-        //this->population.show();
 
-        //this->population.showDescendants();
 //        cout << "Generation: " << generationNumber << endl;
         ++generationNumber;
     }
 
-    report.setChromosome(bestChromosome, this->population.getIndividualSize());
-    report.setFitnessValue(bestFitnessValue);
-    report.setKnapsackWeight(this->knapsack.evaluateWeight(bestChromosome,
-        this->population.getIndividualSize()));
+    ExecutionReport report(this->knapsack, bestChromosome);
     report.setNumberOfGenerations(generationNumber);
 
     return report;

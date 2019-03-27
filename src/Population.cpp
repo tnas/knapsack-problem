@@ -137,35 +137,47 @@ vector<int> Population::getIndividual(unsigned int id)
 }
 
 
-void Population::join()
-{
-    individuals.insert(end(individuals), begin(descendants), end(descendants));
-}
+//void Population::join()
+//{
+//    individuals.insert(end(individuals), begin(descendants), end(descendants));
+//}
+
+//void Population::shrink(int selecteds[])
+//{
+//
+//    for (unsigned int pos = 0; pos < this->threshold; ++pos)
+//    {
+//        descendants.push_back(individuals.at(selecteds[pos]));
+//    }
+//
+//    individuals.clear();
+//    this->join();
+//}
+
 
 void Population::shrink(int selecteds[])
 {
-    descendants.clear();
+    vector<vector<int>> newGeneration;
 
     for (unsigned int pos = 0; pos < this->threshold; ++pos)
     {
-        descendants.push_back(individuals.at(selecteds[pos]));
+        newGeneration.push_back(individuals.at(selecteds[pos]));
     }
 
     individuals.clear();
-    this->join();
+    this->addIndividuals(newGeneration);
 }
 
-// TODO: Fix the memory leak related to indiv heap allocation
-unsigned int* Population::selectIndividual(unsigned int chromosome)
-{
-    unsigned int* indiv = new unsigned int[this->individualSize]();
-    for (unsigned int allel = 0; allel < this->individualSize; ++ allel)
-    {
-        indiv[allel] = individuals.at(chromosome).at(allel);
-    }
-
-    return indiv;
-}
+//vector<int> Population::selectIndividual(unsigned int chromosome)
+//{
+//    unsigned int* indiv = new unsigned int[this->individualSize]();
+//    for (unsigned int allel = 0; allel < this->individualSize; ++ allel)
+//    {
+//        indiv[allel] = individuals.at(chromosome).at(allel);
+//    }
+//
+//    return indiv;
+//}
 
 int Population::getAllele(int individual, int position)
 {

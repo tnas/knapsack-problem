@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1553538800 source:/home/thiago/projects/knapsack-problem/main.cpp
+1553703390 source:/home/thiago/projects/knapsack-problem/main.cpp
 	<iostream>
 	"include/CanonicalGA.h"
 	"include/Knapsack.h"
@@ -14,15 +14,15 @@
 	"Knapsack.h"
 	"Population.h"
 
-1553603638 /home/thiago/projects/knapsack-problem/include/Knapsack.h
+1553703263 /home/thiago/projects/knapsack-problem/include/Knapsack.h
 
-1553606725 /home/thiago/projects/knapsack-problem/include/Population.h
+1553710899 /home/thiago/projects/knapsack-problem/include/Population.h
 	<vector>
 
-1553603691 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
+1553703263 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
 	"../include/Knapsack.h"
 
-1553604373 source:/home/thiago/projects/knapsack-problem/src/Population.cpp
+1553713379 source:/home/thiago/projects/knapsack-problem/src/Population.cpp
 	"../include/Population.h"
 	<stdlib.h>
 	<stdint.h>
@@ -43,29 +43,33 @@
 	<time.h>
 	<stdlib.h>
 
-1553607740 /home/thiago/projects/knapsack-problem/include/CanonicalGA.h
+1553710417 /home/thiago/projects/knapsack-problem/include/CanonicalGA.h
 	<vector>
 	"Knapsack.h"
 	"Population.h"
 	<Fitness.h>
 	<ExecutionReport.h>
 
-1553604662 /home/thiago/projects/knapsack-problem/include/Fitness.h
+1553703263 /home/thiago/projects/knapsack-problem/include/Fitness.h
 	<algorithm>
 
-1553602026 /home/thiago/projects/knapsack-problem/include/ExecutionReport.h
+1553712203 /home/thiago/projects/knapsack-problem/include/ExecutionReport.h
+	<iostream>
+	<vector>
+	<Knapsack.h>
 
-1553604808 source:/home/thiago/projects/knapsack-problem/src/CanonicalGA.cpp
+1553712017 source:/home/thiago/projects/knapsack-problem/src/CanonicalGA.cpp
 	"../include/CanonicalGA.h"
 	<RandomGeneratorHelper.h>
 	<iostream>
 	<vector>
+	<cstdlib>
+	<cmath>
 
-1553602580 source:/home/thiago/projects/knapsack-problem/src/ExecutionReport.cpp
+1553712330 source:/home/thiago/projects/knapsack-problem/src/ExecutionReport.cpp
 	"ExecutionReport.h"
-	<iostream>
 
-1553604705 source:/home/thiago/projects/knapsack-problem/src/Fitness.cpp
+1553703263 source:/home/thiago/projects/knapsack-problem/src/Fitness.cpp
 	"Fitness.h"
 
 1553627253 source:c:\users\140688330213\documents\my-systems\knapsack-problem\main.cpp

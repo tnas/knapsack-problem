@@ -26,9 +26,7 @@ class Population
         void addIndividual(vector<int> individual);
         void addIndividuals(vector<vector<int>> indivs);
         vector<int> getIndividual(unsigned int id);
-        void join();
         void shrink(int selecteds[]);
-        unsigned int* selectIndividual(unsigned int chromosome);
         void setThreshold(int size);
         void setOffspringSize(int size);
         unsigned int getIndividualSize();

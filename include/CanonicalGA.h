@@ -1,7 +1,7 @@
 #ifndef AGCANONICO_H
 #define AGCANONICO_H
 
-#define MAX_GENERATIONS 10
+#define MAX_GENERATIONS 500
 
 #include <vector>
 #include "Knapsack.h"
@@ -27,6 +27,7 @@ class CanonicalGA
         void setKnapsack(Knapsack knapsack);
         void setPopulation(Population population);
         void setGenerationsLimit(int limit);
+        int runRouletteWhellSelection();
         ExecutionReport executeEvolution();
         void runFitnessEvaluation();
         void moderateGeneration(vector<vector<int>> &generation);

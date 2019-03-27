@@ -1,7 +1,4 @@
 #include "ExecutionReport.h"
-#include <iostream>
-
-using namespace std;
 
 ExecutionReport::ExecutionReport()
 {
@@ -10,35 +7,31 @@ ExecutionReport::ExecutionReport()
 
 ExecutionReport::~ExecutionReport()
 {
+    delete(this->chromosome);
 }
 
-void ExecutionReport::setChromosome(unsigned int* chromosome, unsigned int size)
+ExecutionReport::ExecutionReport(Knapsack knapsack, vector<int>chromosome)
 {
-    this->chromosome = chromosome;
-    this->chromosomeSize = size;
+    this->numberOfAllelesOn = 0;
+    this->knapsack = knapsack;
+    this->chromosome = new unsigned int[chromosome.size()];
+    this->chromosomeSize = chromosome.size();
 
-    for (unsigned int pos = 0; pos < size; ++pos)
+    for (unsigned int pos = 0; pos < this->chromosomeSize; ++pos)
+    {
+        this->chromosome[pos] = chromosome.at(pos);
         this->numberOfAllelesOn += this->chromosome[pos];
-}
-
-unsigned int* ExecutionReport::getChromosome()
-{
-    return this->chromosome;
+    }
 }
 
 unsigned int ExecutionReport::getFitnessValue()
 {
-    return this->fitnessValue;
+    return this->knapsack.evaluateValue(this->chromosome, this->chromosomeSize);
 }
 
 unsigned int ExecutionReport::getNumberOfGenerations()
 {
     return this->numberOfGenerations;
-}
-
-void ExecutionReport::setFitnessValue(unsigned int fitnessValue)
-{
-    this->fitnessValue = fitnessValue;
 }
 
 void ExecutionReport::setNumberOfGenerations(unsigned int numberOfGenerations)
@@ -48,12 +41,7 @@ void ExecutionReport::setNumberOfGenerations(unsigned int numberOfGenerations)
 
 unsigned int ExecutionReport::getKnapsackWeight()
 {
-    return this->knapsackWeight;
-}
-
-void ExecutionReport::setKnapsackWeight(unsigned int weight)
-{
-    this->knapsackWeight = weight;
+    return this->knapsack.evaluateWeight(this->chromosome, this->chromosomeSize);
 }
 
 unsigned int ExecutionReport::getNumberOfAllelesOn()
@@ -68,16 +56,16 @@ void ExecutionReport::print()
     {
         cout << this->chromosome[pos] << " ";
     }
-    cout << endl << "Fitness Value: " << this->fitnessValue << endl;
-    cout << "Knapsack Weight: " << this->knapsackWeight << endl;
+    cout << endl << "Fitness Value: " << this->getFitnessValue() << endl;
+    cout << "Knapsack Weight: " << this->getKnapsackWeight() << endl;
     cout << "Number of Generations: " << this->numberOfGenerations << endl;
 }
 
 void ExecutionReport::printCompactedFormat()
 {
     cout << this->getNumberOfAllelesOn() << ","
-         << this->knapsackWeight << ","
-         << this->fitnessValue;
+         << this->getKnapsackWeight() << ","
+         << this->getFitnessValue();
 
     for (unsigned int pos = 0; pos < this->chromosomeSize;
         cout << "," << this->chromosome[pos++]);
