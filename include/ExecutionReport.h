@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <Knapsack.h>
 
 using namespace std;
@@ -13,6 +14,8 @@ class ExecutionReport
     unsigned int numberOfAllelesOn;
     unsigned int* chromosome;
     unsigned int numberOfGenerations;
+    unsigned int sizeOfPopulation;
+    string infeasiblesPolicy;
     Knapsack knapsack;
 
     public:
@@ -23,7 +26,11 @@ class ExecutionReport
         unsigned int getNumberOfGenerations();
         unsigned int getKnapsackWeight();
         unsigned int getNumberOfAllelesOn();
+        unsigned int getPopulationSize();
+        string getInfeasiblesPolicy();
         void setNumberOfGenerations(unsigned int numberOfGenerations);
+        void setSizeOfPopulation(unsigned int populationSize);
+        void setInfeasiblesPolicy(string policy);
         void print();
         void printCompactedFormat();
 };

@@ -1,5 +1,5 @@
 #include "../include/CanonicalGA.h"
-#include <RandomGeneratorHelper.h>
+#include <RandomHelper.h>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -8,19 +8,7 @@
 using namespace std;
 
 static vector<Fitness> fitnessStatus;
-static RandomGeneratorHelper randomHelper;
-
-CanonicalGA::CanonicalGA()
-{
-    this->generationsLimit = MAX_GENERATIONS;
-}
-
-CanonicalGA::CanonicalGA(Knapsack knapsack, Population population, InfeasiblesPolicy infeasiblesPolicy)
-{
-    this->knapsack = knapsack;
-    this->population = population;
-    this->infeasiblesPolicy = infeasiblesPolicy;
-}
+static RandomHelper randomHelper;
 
 CanonicalGA::~CanonicalGA()
 {
@@ -71,10 +59,8 @@ void CanonicalGA::runFitnessEvaluation()
         if (this->infeasiblesPolicy == InfeasiblesPolicy::Penalize &&
             (!isKnapsackFeasible(individual, knapsack)))
         {
-//            cout << "Original value and weight: " << value << "-" << weight;
             value -= this->penalizeInfeasibleIndividual(individual);
             value = value >= 0 ? value : 0;
-//            cout << " Penalized value: " << value << endl;
         }
 
         fitnessStatus.push_back(Fitness(indiv, value, weight));
@@ -198,35 +184,25 @@ unsigned int CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)
     double fIndivWeight = indivWeight;
     double fIndivValue = indivValue;
     double fCapacity = this->knapsack.getCapacity();
-    double normPenaltyFactor = 1.0-((double)(fIndivWeight/(fIndivWeight + fCapacity)));
+    double normPenaltyFactor = ((double)(fCapacity/(fIndivWeight + fCapacity)));
 
     return trunc(fIndivValue - (normPenaltyFactor * fIndivValue));
 }
 
 ExecutionReport CanonicalGA::executeEvolution()
 {
+    this->reset();
+
     vector<vector<int>> generation;
     vector<vector<int>>::iterator itChild;
 
-//    this->population.setThreshold(3);
     generation = this->population.create(this->knapsack.getMaxNumberOfItens());
-//    generation = this->population.create(5);
-//
-//    cout << "Original Population: " << endl;
-//    this->population.show(generation);
-
     this->moderateGeneration(generation);
     this->population.addIndividuals(generation);
 
-//    cout << "Repaired Population: " << endl;
-//    this->population.show();
-
     this->runFitnessEvaluation();
 
-//    cout << "Fitness: " << endl;
-//    printFitness(this->population);
-
-    int generationNumber = 0;
+    unsigned int generationNumber = 0;
     int stIndiv, ndIndiv;
     int selecteds[this->population.getThreshold()];
     unsigned int pos;
@@ -234,7 +210,7 @@ ExecutionReport CanonicalGA::executeEvolution()
     unsigned int bestFitnessValue = 0;
     Fitness bestFromGeneration;
 
-    while (generationNumber < MAX_GENERATIONS)
+    while (generationNumber < this->generationsLimit)
     {
         generation.clear();
 
@@ -268,34 +244,40 @@ ExecutionReport CanonicalGA::executeEvolution()
 
         if (bestFromGeneration.getValue() > bestFitnessValue)
         {
-            //bestChromosome = this->population.selectIndividual(bestFromGeneration.getId());
             bestChromosome = this->population.getIndividual(bestFromGeneration.getId());
             bestFitnessValue = bestFromGeneration.getValue();
         }
 
         this->population.shrink(selecteds);
 
-//        cout << "Generation: " << generationNumber << endl;
         ++generationNumber;
     }
 
     ExecutionReport report(this->knapsack, bestChromosome);
     report.setNumberOfGenerations(generationNumber);
+    report.setSizeOfPopulation(this->population.getThreshold());
 
     return report;
 }
 
-void CanonicalGA::setKnapsack(Knapsack knapsack)
+void CanonicalGA::reset()
 {
-    this->knapsack = knapsack;
+    this->population.destroy();
+    fitnessStatus.clear();
 }
 
-void CanonicalGA::setPopulation(Population population)
+void CanonicalGA::setInfeasiblesPolicy(InfeasiblesPolicy policy)
 {
-    this->population = population;
+    this->infeasiblesPolicy = policy;
 }
 
-void CanonicalGA::setGenerationsLimit(int limit)
+void CanonicalGA::setGenerationsLimit(unsigned int limit)
 {
     this->generationsLimit = limit;
 }
+
+void CanonicalGA::setPopulationSize(unsigned int size)
+{
+    this->population.setThreshold(size);
+}
+

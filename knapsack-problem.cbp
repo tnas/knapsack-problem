@@ -39,14 +39,14 @@
 		<Unit filename="include/Fitness.h" />
 		<Unit filename="include/Knapsack.h" />
 		<Unit filename="include/Population.h" />
-		<Unit filename="include/RandomGeneratorHelper.h" />
+		<Unit filename="include/RandomHelper.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/CanonicalGA.cpp" />
 		<Unit filename="src/ExecutionReport.cpp" />
 		<Unit filename="src/Fitness.cpp" />
 		<Unit filename="src/Knapsack.cpp" />
 		<Unit filename="src/Population.cpp" />
-		<Unit filename="src/RandomGeneratorHelper.cpp" />
+		<Unit filename="src/RandomHelper.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -49,6 +49,26 @@ unsigned int ExecutionReport::getNumberOfAllelesOn()
     return this->numberOfAllelesOn;
 }
 
+unsigned int ExecutionReport::getPopulationSize()
+{
+    return this->sizeOfPopulation;
+}
+
+void ExecutionReport::setSizeOfPopulation(unsigned int populationSize)
+{
+    this->sizeOfPopulation = populationSize;
+}
+
+string ExecutionReport::getInfeasiblesPolicy()
+{
+    return this->infeasiblesPolicy;
+}
+
+void ExecutionReport::setInfeasiblesPolicy(string policy)
+{
+    this->infeasiblesPolicy = policy;
+}
+
 void ExecutionReport::print()
 {
     cout << "Best Chromosome:" << endl;

@@ -72,57 +72,74 @@
 1553703263 source:/home/thiago/projects/knapsack-problem/src/Fitness.cpp
 	"Fitness.h"
 
-1553627253 source:c:\users\140688330213\documents\my-systems\knapsack-problem\main.cpp
+1553786184 source:c:\users\140688330213\documents\my-systems\knapsack-problem\main.cpp
 	<iostream>
 	"include/CanonicalGA.h"
 	"include/Knapsack.h"
 	"include/Population.h"
 
-1553628405 c:\users\140688330213\documents\my-systems\knapsack-problem\include\canonicalga.h
+1553798784 c:\users\140688330213\documents\my-systems\knapsack-problem\include\canonicalga.h
 	<vector>
 	"Knapsack.h"
 	"Population.h"
 	<Fitness.h>
 	<ExecutionReport.h>
 
-1553626180 c:\users\140688330213\documents\my-systems\knapsack-problem\include\knapsack.h
+1553791453 c:\users\140688330213\documents\my-systems\knapsack-problem\include\knapsack.h
 
-1553618342 c:\users\140688330213\documents\my-systems\knapsack-problem\include\population.h
+1553794760 c:\users\140688330213\documents\my-systems\knapsack-problem\include\population.h
 	<vector>
 
-1553617027 c:\users\140688330213\documents\my-systems\knapsack-problem\include\fitness.h
+1553786184 c:\users\140688330213\documents\my-systems\knapsack-problem\include\fitness.h
 	<algorithm>
 
-1553626912 c:\users\140688330213\documents\my-systems\knapsack-problem\include\executionreport.h
+1553800106 c:\users\140688330213\documents\my-systems\knapsack-problem\include\executionreport.h
+	<iostream>
+	<vector>
+	<string>
+	<Knapsack.h>
 
-1553629193 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\canonicalga.cpp
+1553798806 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\canonicalga.cpp
 	"../include/CanonicalGA.h"
-	<RandomGeneratorHelper.h>
+	<RandomHelper.h>
 	<iostream>
 	<vector>
 	<cstdlib>
+	<cmath>
 
-1553612206 c:\users\140688330213\documents\my-systems\knapsack-problem\include\randomgeneratorhelper.h
+1553786184 c:\users\140688330213\documents\my-systems\knapsack-problem\include\randomgeneratorhelper.h
 
-1553627117 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\executionreport.cpp
+1553800136 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\executionreport.cpp
 	"ExecutionReport.h"
-	<iostream>
 
-1553617029 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\fitness.cpp
+1553786184 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\fitness.cpp
 	"Fitness.h"
 
-1553621614 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\knapsack.cpp
+1553786184 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\knapsack.cpp
 	"../include/Knapsack.h"
 
-1553620753 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\population.cpp
+1553794798 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\population.cpp
 	"../include/Population.h"
 	<stdlib.h>
 	<stdint.h>
 	<iostream>
-	"../include/RandomGeneratorHelper.h"
+	"../include/RandomHelper.h"
 
-1553612206 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\randomgeneratorhelper.cpp
+1553786184 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\randomgeneratorhelper.cpp
 	"RandomGeneratorHelper.h"
 	<time.h>
 	<stdlib.h>
+
+1553792853 c:\users\140688330213\documents\my-systems\knapsack-problem\include\randomhelper.h
+
+1553792861 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\randomhelper.cpp
+	"RandomHelper.h"
+	<time.h>
+	<stdlib.h>
+
+1553795209 source:c:\users\140688330213\documents\my-systems\knapsack-problem\src\cgabenchmarking.cpp
+	"CGABenchmarking.h"
+
+1553795185 c:\users\140688330213\documents\my-systems\knapsack-problem\include\cgabenchmarking.h
+	<CanonicalGA.h>
 

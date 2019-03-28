@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#define CROSSOVER_PROBABILITY 0.8
-#define MUTATION_PROPABILITY  0.05
-#define DEFAULT_THRESHOLD 10
+#define CROSSOVER_PROBABILITY 0.9
+#define MUTATION_PROPABILITY  0.1
+#define DEFAULT_THRESHOLD 100
 
 using namespace std;
 
@@ -18,15 +18,18 @@ class Population
     float mutationProbaility;
 
     public:
-        Population();
-        Population(int threshold, int offspringSize);
+        Population(): threshold(DEFAULT_THRESHOLD), offspringSize(DEFAULT_THRESHOLD),
+            crossoverProbability(CROSSOVER_PROBABILITY), mutationProbaility(MUTATION_PROPABILITY){};
+        Population(int threshold, int offspringSize): threshold(threshold),
+            offspringSize(offspringSize){};
         virtual ~Population();
         vector<vector<int>> create(int individualSize);
         vector<vector<int>> reproduce(int first, int second);
         void addIndividual(vector<int> individual);
         void addIndividuals(vector<vector<int>> indivs);
-        vector<int> getIndividual(unsigned int id);
         void shrink(int selecteds[]);
+        void destroy();
+        vector<int> getIndividual(unsigned int id);
         void setThreshold(int size);
         void setOffspringSize(int size);
         unsigned int getIndividualSize();
@@ -37,7 +40,6 @@ class Population
         void show();
         void show(vector<vector<int>> generation);
         void showIndividual(vector<int> indiv);
-        void showDescendants();
 };
 
 #endif // POPULATION_H

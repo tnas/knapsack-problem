@@ -15,24 +15,32 @@ enum InfeasiblesPolicy { Repair, Penalize };
 
 class CanonicalGA
 {
-    int generationsLimit;
+    unsigned int generationsLimit;
     Knapsack knapsack;
     Population population;
     InfeasiblesPolicy infeasiblesPolicy;
 
     public:
-        CanonicalGA();
-        CanonicalGA(Knapsack knapsack, Population population, InfeasiblesPolicy infeasiblesPolicy);
+        CanonicalGA(unsigned int generations, Knapsack knapsack, Population population, InfeasiblesPolicy infeasiblesPolicy):
+            generationsLimit(generations), knapsack(knapsack), population(population), infeasiblesPolicy(infeasiblesPolicy){};
+        CanonicalGA(Knapsack knapsack, Population population, InfeasiblesPolicy infeasiblesPolicy):
+            CanonicalGA(MAX_GENERATIONS, knapsack, population, infeasiblesPolicy){};
+        CanonicalGA(Knapsack knapsack, Population population):
+            CanonicalGA(knapsack, population, InfeasiblesPolicy::Repair){};
+        CanonicalGA():
+            generationsLimit(MAX_GENERATIONS), infeasiblesPolicy(InfeasiblesPolicy::Repair){};
         virtual ~CanonicalGA();
-        void setKnapsack(Knapsack knapsack);
-        void setPopulation(Population population);
-        void setGenerationsLimit(int limit);
+
         int runRouletteWhellSelection();
         ExecutionReport executeEvolution();
         void runFitnessEvaluation();
         void moderateGeneration(vector<vector<int>> &generation);
         void repairInfeasibleIndividual(vector<int> &indiv);
         unsigned int penalizeInfeasibleIndividual(vector<int> indiv);
+        void reset();
+        void setInfeasiblesPolicy(InfeasiblesPolicy policy);
+        void setGenerationsLimit(unsigned int limit);
+        void setPopulationSize(unsigned int size);
 };
 
 #endif // AGCANONICO_H
