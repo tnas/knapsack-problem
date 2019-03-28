@@ -10,6 +10,8 @@ using namespace std;
 static list<ExecutionReport> reportsMemory;
 static unsigned int numberOfGenerations[] = { 500 };
 static unsigned int sizeOfPopulations[] = { 100 };
+static InfeasiblesPolicy policies[] =
+    { InfeasiblesPolicy::Repair, InfeasiblesPolicy::Penalize };
 
 CGABenchmarking::~CGABenchmarking()
 {
@@ -34,6 +36,7 @@ void CGABenchmarking::setNumberOfExecutions(unsigned int executions)
 void CGABenchmarking::run()
 {
     ExecutionReport report;
+
 
     this->canonicalGA.setInfeasiblesPolicy(InfeasiblesPolicy::Repair);
 }
