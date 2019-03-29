@@ -1,32 +1,43 @@
 #include "ExecutionReport.h"
 
-ExecutionReport::ExecutionReport()
+ExecutionReport::ExecutionReport(Knapsack knapsack, vector<int> chromosome)
 {
     this->numberOfAllelesOn = 0;
+    this->knapsack = knapsack;
+    this->chromosome = chromosome;
+    this->chromosomeSize = chromosome.size();
+
+    for (int allele : chromosome)
+    {
+        this->numberOfAllelesOn += allele;
+    }
 }
 
 ExecutionReport::~ExecutionReport()
 {
-    delete(this->chromosome);
 }
 
-ExecutionReport::ExecutionReport(Knapsack knapsack, vector<int>chromosome)
+unsigned int* getKnapsackInstance(vector<int> chromosome)
 {
-    this->numberOfAllelesOn = 0;
-    this->knapsack = knapsack;
-    this->chromosome = new unsigned int[chromosome.size()];
-    this->chromosomeSize = chromosome.size();
+    unsigned int instanceSize = chromosome.size();
+    unsigned int* instance = new unsigned int[instanceSize];
 
-    for (unsigned int pos = 0; pos < this->chromosomeSize; ++pos)
+    for (unsigned int pos = 0; pos < instanceSize; ++pos)
     {
-        this->chromosome[pos] = chromosome.at(pos);
-        this->numberOfAllelesOn += this->chromosome[pos];
+        instance[pos] = chromosome.at(pos);
     }
+
+    return instance;
 }
 
 unsigned int ExecutionReport::getFitnessValue()
 {
-    return this->knapsack.evaluateValue(this->chromosome, this->chromosomeSize);
+    unsigned int value;
+    unsigned int* instance = getKnapsackInstance(this->chromosome);
+    value = this->knapsack.evaluateValue(instance, this->chromosomeSize);
+    delete instance;
+
+    return value;
 }
 
 unsigned int ExecutionReport::getNumberOfGenerations()
@@ -41,7 +52,13 @@ void ExecutionReport::setNumberOfGenerations(unsigned int numberOfGenerations)
 
 unsigned int ExecutionReport::getKnapsackWeight()
 {
-    return this->knapsack.evaluateWeight(this->chromosome, this->chromosomeSize);
+    unsigned int value;
+    unsigned int* instance = getKnapsackInstance(this->chromosome);
+    value = this->knapsack.evaluateWeight(instance, this->chromosomeSize);
+    delete instance;
+
+    return value;
+
 }
 
 unsigned int ExecutionReport::getNumberOfAllelesOn()
@@ -69,16 +86,45 @@ void ExecutionReport::setInfeasiblesPolicy(string policy)
     this->infeasiblesPolicy = policy;
 }
 
-void ExecutionReport::print()
+string ExecutionReport::print()
 {
-    cout << "Best Chromosome:" << endl;
+    string output;
+
+    output.append(string("["));
+    output.append(string("Infeasibles Policy: "));
+    output.append(this->infeasiblesPolicy);
+    output.append(string(", "));
+
+    output.append(string("Number of Generations: "));
+    output.append(string(to_string(this->numberOfGenerations)));
+    output.append(string(", "));
+
+    output.append(string("Population Size: "));
+    output.append(string(to_string(this->sizeOfPopulation)));
+    output.append(string("]\n"));
+
+    output.append(string("Best Chromosome: "));
     for (unsigned int pos = 0; pos < this->chromosomeSize; ++pos)
     {
-        cout << this->chromosome[pos] << " ";
+        output.append(string(to_string(this->chromosome[pos])));
+        output.append(string(" "));
     }
-    cout << endl << "Fitness Value: " << this->getFitnessValue() << endl;
-    cout << "Knapsack Weight: " << this->getKnapsackWeight() << endl;
-    cout << "Number of Generations: " << this->numberOfGenerations << endl;
+
+    output.append(string("Fitness Value: "));
+    output.append(string(to_string(this->getFitnessValue())));
+    output.append(string("\n"));
+
+    output.append(string("Knapsack Weight: "));
+    output.append(string(to_string(this->getKnapsackWeight())));
+    output.append(string("\n"));
+
+    output.append(string("Number of Itens: "));
+    output.append(string(to_string(this->numberOfAllelesOn)));
+    output.append(string("\n"));
+
+    cout << output;
+
+    return output;
 }
 
 void ExecutionReport::printCompactedFormat()

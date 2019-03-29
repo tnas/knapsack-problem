@@ -2,7 +2,7 @@
 #define CGABENCHMARKING_H
 
 #include <CanonicalGA.h>
-#include <list>
+#include <vector>
 
 #define DEFAULT_EXECUTIONS 10
 
@@ -21,9 +21,9 @@ class CGABenchmarking
         virtual ~CGABenchmarking();
         void setNumberOfExecutions(unsigned int executions);
         void run();
-        list<ExecutionReport> run(unsigned int numberOfGenerations,
-                                  unsigned int populationSize,
-                                  InfeasiblesPolicy policy);
+        vector<ExecutionReport> run(unsigned int populationSize,
+            unsigned int numberOfGenerations, InfeasiblesPolicy policy);
+        void printFile();
 };
 
 #endif // CGABENCHMARKING_H

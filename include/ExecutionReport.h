@@ -12,14 +12,14 @@ class ExecutionReport
 {
     unsigned int chromosomeSize;
     unsigned int numberOfAllelesOn;
-    unsigned int* chromosome;
+    vector<int> chromosome;
     unsigned int numberOfGenerations;
     unsigned int sizeOfPopulation;
     string infeasiblesPolicy;
     Knapsack knapsack;
 
     public:
-        ExecutionReport();
+        ExecutionReport(): numberOfAllelesOn(0){};
         ExecutionReport(Knapsack knapsack, vector<int> chromosome);
         virtual ~ExecutionReport();
         unsigned int getFitnessValue();
@@ -31,7 +31,7 @@ class ExecutionReport
         void setNumberOfGenerations(unsigned int numberOfGenerations);
         void setSizeOfPopulation(unsigned int populationSize);
         void setInfeasiblesPolicy(string policy);
-        void print();
+        string print();
         void printCompactedFormat();
 };
 

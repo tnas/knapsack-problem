@@ -2,6 +2,7 @@
 #include "include/CanonicalGA.h"
 #include "include/Knapsack.h"
 #include "include/Population.h"
+#include "include/CGABenchmarking.h"
 
 using namespace std;
 
@@ -12,11 +13,14 @@ int main()
 {
     Knapsack knapsack;
     Population population;
-    CanonicalGA canonicalGA(knapsack, population, InfeasiblesPolicy::Penalize);
+    CanonicalGA canonicalGA(knapsack, population);
 
-    ExecutionReport report = canonicalGA.executeEvolution();
-    //report.printCompactedFormat();
-    report.print();
+    CGABenchmarking cgaBenchmark(canonicalGA);
+    cgaBenchmark.run();
+    cgaBenchmark.printFile();
+
+//    ExecutionReport report = canonicalGA.executeEvolution();
+//    report.print();
 
     return 0;
 }

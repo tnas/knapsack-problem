@@ -34,6 +34,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/CGABenchmarking.h" />
 		<Unit filename="include/CanonicalGA.h" />
 		<Unit filename="include/ExecutionReport.h" />
 		<Unit filename="include/Fitness.h" />
@@ -41,6 +42,7 @@
 		<Unit filename="include/Population.h" />
 		<Unit filename="include/RandomHelper.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/CGABenchmarking.cpp" />
 		<Unit filename="src/CanonicalGA.cpp" />
 		<Unit filename="src/ExecutionReport.cpp" />
 		<Unit filename="src/Fitness.cpp" />
