@@ -15,12 +15,15 @@ int main()
     Population population;
     CanonicalGA canonicalGA(knapsack, population);
 
-    CGABenchmarking cgaBenchmark(canonicalGA);
-    cgaBenchmark.run();
-    cgaBenchmark.printFile();
+//    CGABenchmarking cgaBenchmark(canonicalGA);
+//    cgaBenchmark.run();
 
-//    ExecutionReport report = canonicalGA.executeEvolution();
-//    report.print();
+    unsigned int param = 8192;
+    canonicalGA.setGenerationsLimit(param);
+    canonicalGA.setPopulationSize(param);
+    canonicalGA.setInfeasiblesPolicy(InfeasiblesPolicy::Repair);
+    ExecutionReport report = canonicalGA.executeEvolution();
+    report.print();
 
     return 0;
 }

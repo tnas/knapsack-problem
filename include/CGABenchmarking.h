@@ -14,8 +14,8 @@ class CGABenchmarking
     unsigned int numberOfExecutions;
 
     public:
-        CGABenchmarking();
-        CGABenchmarking(CanonicalGA ga): canonicalGA(ga){};
+        CGABenchmarking():numberOfExecutions(DEFAULT_EXECUTIONS){};
+        CGABenchmarking(CanonicalGA ga): canonicalGA(ga), numberOfExecutions(DEFAULT_EXECUTIONS){};
         CGABenchmarking(CanonicalGA ga, unsigned int executions):
             canonicalGA(ga), numberOfExecutions(executions){};
         virtual ~CGABenchmarking();
@@ -23,7 +23,6 @@ class CGABenchmarking
         void run();
         vector<ExecutionReport> run(unsigned int populationSize,
             unsigned int numberOfGenerations, InfeasiblesPolicy policy);
-        void printFile();
 };
 
 #endif // CGABENCHMARKING_H

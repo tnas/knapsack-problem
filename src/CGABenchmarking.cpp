@@ -7,12 +7,18 @@
 
 using namespace std;
 
-static string verboseFileName = "ag-verbose.txt";
-static string compiledFileName = "ag-compiled.txt";
-static vector<ExecutionReport> verboseExecutionHistory;
+static unsigned int execBests = 0;
+static unsigned int execCompiled = 0;
+static unsigned int execVerbose  = 0;
+static string verboseFileNameRepair = "ag-verbose-repair.txt";
+static string compiledFileNameRepair = "ag-compiled-repair.txt";
+static string bestsFileNameRepair = "ag-bests-repair.txt";
+static string verboseFileNamePenalty = "ag-verbose-penalty.txt";
+static string compiledFileNamePenalty = "ag-compiled-penalty.txt";
+static string bestsFileNamePenalty = "ag-bests-penalty.txt";
 static vector<ExecutionReport> compiledExecutionHistory;
-static vector<int> numberOfGenerations{ 10, 50, 100, 500, 1000 };
-static vector<int> sizeOfPopulations{ 10, 50, 100, 500, 1000 };
+static vector<int> numberOfGenerations{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192 };
+static vector<int> sizeOfPopulations{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192 };
 static vector<InfeasiblesPolicy> policies{ InfeasiblesPolicy::Repair, InfeasiblesPolicy::Penalize };
 
 CGABenchmarking::~CGABenchmarking()
@@ -37,10 +43,38 @@ string toString(InfeasiblesPolicy policy)
     }
 }
 
-void compileReports(vector<ExecutionReport> reports)
+void printHistory(string fileName, vector<ExecutionReport> reportsHistory)
 {
+    ofstream verboseFile(fileName, ios::app);
+    unsigned int exec = fileName.find("verbose") != string::npos ? execVerbose :
+        fileName.find("compiled") != string::npos ? execCompiled : execBests;
+
+    if (verboseFile.is_open())
+    {
+        for (ExecutionReport report : reportsHistory)
+        {
+            verboseFile << "Execution [" << exec++ << "]" << endl;
+            verboseFile << report.print();
+            verboseFile << "-------------------------------------------" << endl;
+        }
+
+        verboseFile.close();
+    }
+    else
+    {
+        cout << "Unable to generate " << fileName << " execution file history." << endl;
+    }
+}
+
+void compileReports(vector<ExecutionReport> reports, InfeasiblesPolicy policy)
+{
+    vector<ExecutionReport> bestInConfiguration;
     ExecutionReport bestExecution;
     bestExecution = reports.front();
+
+    string compiledFileName = policy == InfeasiblesPolicy::Repair ?
+            compiledFileNameRepair : compiledFileNamePenalty;
+
 
     for (ExecutionReport report : reports)
     {
@@ -48,24 +82,64 @@ void compileReports(vector<ExecutionReport> reports)
             bestExecution = report;
     }
 
+    bestInConfiguration.push_back(bestExecution);
+    printHistory(compiledFileName, bestInConfiguration);
+
     compiledExecutionHistory.push_back(bestExecution);
 }
+
+
+void bestCompiledReport(InfeasiblesPolicy policy)
+{
+    vector<ExecutionReport> bestCompiled;
+    ExecutionReport bestExecution;
+
+    string bestsFileName = policy == InfeasiblesPolicy::Repair ?
+            bestsFileNameRepair : bestsFileNamePenalty;
+
+    bestExecution = compiledExecutionHistory.front();
+
+    for (ExecutionReport report : compiledExecutionHistory)
+    {
+        if (report.getFitnessValue() > bestExecution.getFitnessValue())
+            bestExecution = report;
+    }
+
+    bestCompiled.push_back(bestExecution);
+    printHistory(bestsFileName, bestCompiled);
+
+    compiledExecutionHistory.clear();
+}
+
 
 void CGABenchmarking::run()
 {
     vector<ExecutionReport> reports;
+    string verboseFileName, bestsFileName;
 
     for (InfeasiblesPolicy policy : policies)
     {
+        if (policy == InfeasiblesPolicy::Repair)
+        {
+            verboseFileName = verboseFileNameRepair;
+            bestsFileName   = bestsFileNameRepair;
+        }
+        else
+        {
+            verboseFileName = verboseFileNamePenalty;
+            bestsFileName   = bestsFileNamePenalty;
+        }
+
         for (unsigned int generations : numberOfGenerations)
         {
             for (unsigned int population : sizeOfPopulations)
             {
                 reports = this->run(population, generations, policy);
-                compileReports(reports);
-                verboseExecutionHistory.insert(verboseExecutionHistory.end(),
-                    begin(reports), end(reports));
+                compileReports(reports, policy);
+                printHistory(verboseFileName, reports);
             }
+
+            bestCompiledReport(policy);
         }
     }
 }
@@ -89,34 +163,5 @@ vector<ExecutionReport> CGABenchmarking::run(unsigned int populationSize,
 
     return reportsList;
 }
-
-void printHistory(string fileName, vector<ExecutionReport> reportsHistory)
-{
-    ofstream verboseFile(fileName);
-    unsigned int exec = 0;
-
-    if (verboseFile.is_open())
-    {
-        for (ExecutionReport report : reportsHistory)
-        {
-            verboseFile << "Execution [" << exec++ << "]" << endl;
-            verboseFile << report.print();
-            verboseFile << "-------------------------------------------" << endl;
-        }
-
-        verboseFile.close();
-    }
-    else
-    {
-        cout << "Unable to generate " << fileName << " execution file history." << endl;
-    }
-}
-
-void CGABenchmarking::printFile()
-{
-    printHistory(verboseFileName, verboseExecutionHistory);
-    printHistory(compiledFileName, compiledExecutionHistory);
-}
-
 
 
