@@ -11,8 +11,9 @@
 ./knapsack-problem -r -g &lt;number of generations&gt; -p &lt;population size&gt; -i &lt;infeasible estrategy&gt;
 </code>
 
-<br/>
+<br>
 
+* Infeasible Estrategies Available:
 <code>
   &lt;infeasible estrategy&gt;
 </code>
