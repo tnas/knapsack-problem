@@ -30,19 +30,6 @@ void CGABenchmarking::setNumberOfExecutions(unsigned int executions)
     this->numberOfExecutions = executions;
 }
 
-string toString(InfeasiblesPolicy policy)
-{
-    switch (policy)
-    {
-    case Repair :
-        return "Repair";
-    case Penalize :
-        return "Penalize";
-    default :
-        return "No identified policy";
-    }
-}
-
 void printHistory(string fileName, vector<ExecutionReport> reportsHistory)
 {
     ofstream verboseFile(fileName, ios::app);
@@ -157,7 +144,7 @@ vector<ExecutionReport> CGABenchmarking::run(unsigned int populationSize,
     for (unsigned int exec = 0; exec < this->numberOfExecutions; ++exec)
     {
         report = this->canonicalGA.executeEvolution();
-        report.setInfeasiblesPolicy(toString(policy));
+        report.setInfeasiblesPolicy(policy);
         reportsList.push_back(report);
     }
 

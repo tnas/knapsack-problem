@@ -3,6 +3,7 @@
 
 #define MAX_GENERATIONS 500
 
+#include <config.h>
 #include <vector>
 #include "Knapsack.h"
 #include "Population.h"
@@ -10,8 +11,6 @@
 #include <ExecutionReport.h>
 
 using namespace std;
-
-enum InfeasiblesPolicy { Repair, Penalize };
 
 class CanonicalGA
 {

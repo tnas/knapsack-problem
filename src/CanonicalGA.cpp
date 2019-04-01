@@ -256,6 +256,7 @@ ExecutionReport CanonicalGA::executeEvolution()
     ExecutionReport report(this->knapsack, bestChromosome);
     report.setNumberOfGenerations(generationNumber);
     report.setSizeOfPopulation(this->population.getThreshold());
+    report.setInfeasiblesPolicy(this->infeasiblesPolicy);
 
     return report;
 }

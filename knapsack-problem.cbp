@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="-r -g 64 -p 32 -i 0" />
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="include" />
@@ -41,6 +42,9 @@
 		<Unit filename="include/Knapsack.h" />
 		<Unit filename="include/Population.h" />
 		<Unit filename="include/RandomHelper.h" />
+		<Unit filename="include/config.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="main.cpp" />
 		<Unit filename="src/CGABenchmarking.cpp" />
 		<Unit filename="src/CanonicalGA.cpp" />

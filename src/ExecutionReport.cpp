@@ -81,9 +81,19 @@ string ExecutionReport::getInfeasiblesPolicy()
     return this->infeasiblesPolicy;
 }
 
-void ExecutionReport::setInfeasiblesPolicy(string policy)
+void ExecutionReport::setInfeasiblesPolicy(InfeasiblesPolicy policy)
 {
-    this->infeasiblesPolicy = policy;
+    switch (policy)
+    {
+    case Repair :
+        this->infeasiblesPolicy = "Repair";
+        return;
+    case Penalize :
+        this->infeasiblesPolicy = "Penalize";
+        return;
+    default :
+        this->infeasiblesPolicy = "No Identified";
+    }
 }
 
 string ExecutionReport::print()
@@ -110,7 +120,7 @@ string ExecutionReport::print()
         output.append(string(" "));
     }
 
-    output.append(string("Fitness Value: "));
+    output.append(string("\nFitness Value: "));
     output.append(string(to_string(this->getFitnessValue())));
     output.append(string("\n"));
 
@@ -118,7 +128,7 @@ string ExecutionReport::print()
     output.append(string(to_string(this->getKnapsackWeight())));
     output.append(string("\n"));
 
-    output.append(string("Number of Itens: "));
+    output.append(string("Number of Items: "));
     output.append(string(to_string(this->numberOfAllelesOn)));
     output.append(string("\n"));
 

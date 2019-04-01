@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <config.h>
 #include <Knapsack.h>
 
 using namespace std;
@@ -30,7 +31,7 @@ class ExecutionReport
         string getInfeasiblesPolicy();
         void setNumberOfGenerations(unsigned int numberOfGenerations);
         void setSizeOfPopulation(unsigned int populationSize);
-        void setInfeasiblesPolicy(string policy);
+        void setInfeasiblesPolicy(InfeasiblesPolicy policy);
         string print();
         void printCompactedFormat();
 };
