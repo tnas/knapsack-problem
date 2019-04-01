@@ -11,11 +11,11 @@
 ./knapsack-problem -r -g &lt;number of generations&gt; -p &lt;population size&gt; -i &lt;infeasible estrategy&gt;
 </code>
 
-<br>
+<br><br>
 
 <code>
   &lt;infeasible estrategy&gt;
 </code>
 
- * 	0: Repair Individuals
- * 	1: Penalize Individuals
+ * 	0: Repair infactibles
+ * 	1: Penalize infactibles
