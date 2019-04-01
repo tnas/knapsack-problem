@@ -12,9 +12,6 @@
 </code>
 
 <br>
-
-
-* Infeasible Estrategies Available:
 <code>
   &lt;infeasible estrategy&gt;
 </code>
