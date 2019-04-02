@@ -3,8 +3,11 @@
 #include <unistd.h>
 #include "include/CanonicalGA.h"
 #include "include/Knapsack.h"
-#include "include/Population.h"
+#include "include/BinaryPopulation.h"
 #include "include/CGABenchmarking.h"
+#include <IntegerGA.h>
+#include <IntegerPopulation.h>
+
 
 using namespace std;
 
@@ -18,19 +21,18 @@ int main(int argc, char* argv[])
     InfeasiblesPolicy infeasiblePolicy;
     ExecutionType executionType;
 
-    Knapsack knapsack;
-    Population population;
-    CanonicalGA canonicalGA(knapsack, population);
-
-    while ((opt = getopt(argc, argv, "brg:p:i:")) != EOF)
+    while ((opt = getopt(argc, argv, "bstg:p:i:")) != EOF)
     {
         switch(opt)
         {
             case 'b':
                 executionType = ExecutionType::Benchmark;
                 break;
-            case 'r':
+            case 's':
                 executionType = ExecutionType::Single;
+                break;
+            case 't':
+                executionType = ExecutionType::Integer;
                 break;
             case 'g':
                 generations = atoi(optarg);
@@ -48,18 +50,28 @@ int main(int argc, char* argv[])
         }
     }
 
+    Knapsack knapsack;
+    BinaryPopulation population;
+    CanonicalGA canonicalGA(knapsack, population);
+
     if (executionType == ExecutionType::Benchmark)
     {
         CGABenchmarking cgaBenchmark(canonicalGA);
         cgaBenchmark.run();
     }
-    else
+    else if (executionType == ExecutionType::Single)
     {
         canonicalGA.setGenerationsLimit(generations);
         canonicalGA.setPopulationSize(populationSize);
         canonicalGA.setInfeasiblesPolicy(infeasiblePolicy);
         ExecutionReport report = canonicalGA.executeEvolution();
         report.print();
+    }
+    else if (executionType == ExecutionType::Integer)
+    {
+        IntegerPopulation integerPopulation;
+        IntegerGA integerGA(knapsack, integerPopulation);
+        integerGA.executeEvolution();
     }
 
     return 0;

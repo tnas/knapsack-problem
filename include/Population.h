@@ -2,44 +2,45 @@
 #define POPULATION_H
 
 #include <vector>
+#include <Knapsack.h>
 
 #define CROSSOVER_PROBABILITY 0.9
 #define MUTATION_PROPABILITY  0.1
-#define DEFAULT_THRESHOLD 100
 
 using namespace std;
 
 class Population
 {
-    unsigned int threshold;
-    unsigned int offspringSize;
     unsigned int individualSize;
-    float crossoverProbability;
-    float mutationProbaility;
+    unsigned int threshold;
 
     public:
-        Population(): threshold(DEFAULT_THRESHOLD), offspringSize(DEFAULT_THRESHOLD),
-            crossoverProbability(CROSSOVER_PROBABILITY), mutationProbaility(MUTATION_PROPABILITY){};
-        Population(int threshold, int offspringSize): threshold(threshold),
-            offspringSize(offspringSize){};
+        Population();
         virtual ~Population();
-        vector<vector<int>> create(int individualSize);
-        vector<vector<int>> reproduce(int first, int second);
-        void addIndividual(vector<int> individual);
-        void addIndividuals(vector<vector<int>> indivs);
-        void shrink(int selecteds[]);
-        void destroy();
-        vector<int> getIndividual(unsigned int id);
-        void setThreshold(int size);
-        void setOffspringSize(int size);
-        unsigned int getIndividualSize();
-        unsigned int getOffspringSize();
-        int getAllele(int individual, int position);
-        unsigned int getThreshold();
-        int getCurrentSize();
-        void show();
-        void show(vector<vector<int>> generation);
-        void showIndividual(vector<int> indiv);
+        virtual vector<vector<int>> create(Knapsack knapsack);
+        virtual void show(vector<vector<int>> generation);
+        virtual unsigned int getCurrentSize();
+        virtual vector<int> getIndividual(unsigned int id);
+
+        void setIndividualSize(unsigned int size)
+        {
+            this->individualSize = size;
+        }
+
+        unsigned int getIndividualSize()
+        {
+            return this->individualSize;
+        }
+
+        void setThreshold(unsigned int size)
+        {
+            this->threshold = size;
+        }
+
+        unsigned int getThreshold()
+        {
+            return this->threshold;
+        }
 };
 
 #endif // POPULATION_H

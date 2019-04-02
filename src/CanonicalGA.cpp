@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <cmath>
 
+#define NO_ADDITIONAL_RESTRICTION -1
+
 using namespace std;
 
 static vector<Fitness> fitnessStatus;
@@ -69,7 +71,7 @@ void CanonicalGA::runFitnessEvaluation()
     delete(instance);
 }
 
-void printFitness(Population population)
+void printFitness(BinaryPopulation population)
 {
     for (Fitness fit : fitnessStatus)
     {
@@ -196,7 +198,8 @@ ExecutionReport CanonicalGA::executeEvolution()
     vector<vector<int>> generation;
     vector<vector<int>>::iterator itChild;
 
-    generation = this->population.create(this->knapsack.getMaxNumberOfItens());
+    this->population.setIndividualSize(this->knapsack.getMaxNumberOfItens());
+    generation = this->population.create(this->knapsack);
     this->moderateGeneration(generation);
     this->population.addIndividuals(generation);
 

@@ -11,10 +11,11 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-r -g 64 -p 32 -i 0" />
+				<Option parameters="-t -g 64 -p 32 -i 0" />
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="include" />
+					<Add directory="include-integer" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -25,6 +26,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="include" />
+					<Add directory="include-integer" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -35,6 +37,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include-integer/IntegerGA.h" />
+		<Unit filename="include-integer/IntegerPopulation.h" />
+		<Unit filename="include/BinaryPopulation.h" />
 		<Unit filename="include/CGABenchmarking.h" />
 		<Unit filename="include/CanonicalGA.h" />
 		<Unit filename="include/ExecutionReport.h" />
@@ -46,6 +51,9 @@
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="main.cpp" />
+		<Unit filename="src-integer/IntegerGA.cpp" />
+		<Unit filename="src-integer/IntegerPopulation.cpp" />
+		<Unit filename="src/BinaryPopulation.cpp" />
 		<Unit filename="src/CGABenchmarking.cpp" />
 		<Unit filename="src/CanonicalGA.cpp" />
 		<Unit filename="src/ExecutionReport.cpp" />

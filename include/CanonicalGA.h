@@ -6,7 +6,7 @@
 #include <config.h>
 #include <vector>
 #include "Knapsack.h"
-#include "Population.h"
+#include "BinaryPopulation.h"
 #include <Fitness.h>
 #include <ExecutionReport.h>
 
@@ -16,18 +16,22 @@ class CanonicalGA
 {
     unsigned int generationsLimit;
     Knapsack knapsack;
-    Population population;
+    BinaryPopulation population;
     InfeasiblesPolicy infeasiblesPolicy;
 
     public:
-        CanonicalGA(unsigned int generations, Knapsack knapsack, Population population, InfeasiblesPolicy infeasiblesPolicy):
+        CanonicalGA(unsigned int generations, Knapsack knapsack, BinaryPopulation population, InfeasiblesPolicy infeasiblesPolicy):
             generationsLimit(generations), knapsack(knapsack), population(population), infeasiblesPolicy(infeasiblesPolicy){};
-        CanonicalGA(Knapsack knapsack, Population population, InfeasiblesPolicy infeasiblesPolicy):
+
+        CanonicalGA(Knapsack knapsack, BinaryPopulation population, InfeasiblesPolicy infeasiblesPolicy):
             CanonicalGA(MAX_GENERATIONS, knapsack, population, infeasiblesPolicy){};
-        CanonicalGA(Knapsack knapsack, Population population):
+
+        CanonicalGA(Knapsack knapsack, BinaryPopulation population):
             CanonicalGA(knapsack, population, InfeasiblesPolicy::Repair){};
+
         CanonicalGA():
             generationsLimit(MAX_GENERATIONS), infeasiblesPolicy(InfeasiblesPolicy::Repair){};
+
         virtual ~CanonicalGA();
 
         int runRouletteWhellSelection();
