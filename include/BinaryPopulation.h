@@ -30,10 +30,11 @@ class BinaryPopulation : public Population
         }
 
         virtual ~BinaryPopulation();
-        vector<vector<int>> create(Knapsack knapsack);
-        vector<vector<int>> reproduce(int first, int second);
         void addIndividual(vector<int> individual);
+        void makeMutation(vector<int> individual, int allele);
         void addIndividuals(vector<vector<int>> indivs);
+        bool isAlleleExchangeable();
+
         void shrink(int selecteds[]);
         void destroy();
         void setOffspringSize(int size);

@@ -16,7 +16,7 @@ void BinaryPopulation::setOffspringSize(int size)
     this->offspringSize = size;
 }
 
-vector<vector<int>> BinaryPopulation::create(Knapsack knapsack)
+vector<vector<int>> Population::create(Knapsack knapsack)
 {
     vector<vector<int>> firstGeneration;
 
@@ -35,18 +35,18 @@ vector<vector<int>> BinaryPopulation::create(Knapsack knapsack)
     return firstGeneration;
 }
 
-void makeMutation(vector<int> individual, int allele)
+void BinaryPopulation::makeMutation(vector<int> individual, int allele)
 {
     if (randomHelper.getRandomBetween0and1() < MUTATION_PROPABILITY)
         individual.at(allele) ^= 1;
 }
 
-bool isAlleleExchangeable()
+bool BinaryPopulation::isAlleleExchangeable()
 {
     return randomHelper.getRandomBetween0and1() < CROSSOVER_PROBABILITY;
 }
 
-vector<vector<int>> BinaryPopulation::reproduce(int first, int second)
+vector<vector<int>> Population::reproduce(int first, int second)
 {
     unsigned int crossoverPoint = randomHelper.getRandomBetweenZeroTo(this->getIndividualSize());
     unsigned int allele, stParent, ndParent;

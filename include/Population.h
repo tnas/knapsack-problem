@@ -17,7 +17,15 @@ class Population
     public:
         Population();
         virtual ~Population();
+
         virtual vector<vector<int>> create(Knapsack knapsack);
+        virtual vector<vector<int>> reproduce(int first, int second);
+        virtual void shrink(int selecteds[]);
+
+        virtual void makeMutation(vector<int> individual, int allele);
+        virtual void addIndividuals(vector<vector<int>> indivs);
+        virtual bool isAlleleExchangeable();
+
         virtual void show(vector<vector<int>> generation);
         virtual unsigned int getCurrentSize();
         virtual vector<int> getIndividual(unsigned int id);

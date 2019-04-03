@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     int opt;
     unsigned int populationSize, generations;
     InfeasiblesPolicy infeasiblePolicy;
-    ExecutionType executionType;
+    ExecutionType executionType = ExecutionType::Benchmark;
 
     while ((opt = getopt(argc, argv, "bstg:p:i:")) != EOF)
     {
@@ -71,7 +71,8 @@ int main(int argc, char* argv[])
     {
         IntegerPopulation integerPopulation;
         IntegerGA integerGA(knapsack, integerPopulation);
-        integerGA.executeEvolution();
+        ExecutionReport report = integerGA.executeEvolution();
+        report.print();
     }
 
     return 0;

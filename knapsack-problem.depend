@@ -1,10 +1,14 @@
 # depslib dependency file v1.0
-1553897418 source:/home/thiago/projects/knapsack-problem/main.cpp
+1554295721 source:/home/thiago/projects/knapsack-problem/main.cpp
 	<iostream>
+	<ctype.h>
+	<unistd.h>
 	"include/CanonicalGA.h"
 	"include/Knapsack.h"
-	"include/Population.h"
+	"include/BinaryPopulation.h"
 	"include/CGABenchmarking.h"
+	<IntegerGA.h>
+	<IntegerPopulation.h>
 
 1553514337 source:/home/thiago/projects/knapsack-problem/src/AGCanonico.cpp
 	"../include/AGCanonico.h"
@@ -15,27 +19,24 @@
 	"Knapsack.h"
 	"Population.h"
 
-1553703263 /home/thiago/projects/knapsack-problem/include/Knapsack.h
+1554279968 /home/thiago/projects/knapsack-problem/include/Knapsack.h
 
-1553851324 /home/thiago/projects/knapsack-problem/include/Population.h
+1554295223 /home/thiago/projects/knapsack-problem/include/Population.h
 	<vector>
+	<Knapsack.h>
 
-1553703263 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
+1554279968 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
 	"../include/Knapsack.h"
 
-1553851324 source:/home/thiago/projects/knapsack-problem/src/Population.cpp
-	"../include/Population.h"
-	<stdlib.h>
-	<stdint.h>
-	<iostream>
-	"../include/RandomHelper.h"
+1554284740 source:/home/thiago/projects/knapsack-problem/src/Population.cpp
+	"Population.h"
 
-1553851324 source:/home/thiago/projects/knapsack-problem/src/RandomHelper.cpp
+1554279968 source:/home/thiago/projects/knapsack-problem/src/RandomHelper.cpp
 	"RandomHelper.h"
 	<time.h>
 	<stdlib.h>
 
-1553851324 /home/thiago/projects/knapsack-problem/include/RandomHelper.h
+1554279968 /home/thiago/projects/knapsack-problem/include/RandomHelper.h
 
 1553527282 /home/thiago/projects/knapsack-problem/include/RandomGeneratorHelper.h
 
@@ -44,23 +45,25 @@
 	<time.h>
 	<stdlib.h>
 
-1553851324 /home/thiago/projects/knapsack-problem/include/CanonicalGA.h
+1554279968 /home/thiago/projects/knapsack-problem/include/CanonicalGA.h
+	<config.h>
 	<vector>
 	"Knapsack.h"
-	"Population.h"
+	"BinaryPopulation.h"
 	<Fitness.h>
 	<ExecutionReport.h>
 
-1553703263 /home/thiago/projects/knapsack-problem/include/Fitness.h
+1554279968 /home/thiago/projects/knapsack-problem/include/Fitness.h
 	<algorithm>
 
-1553862121 /home/thiago/projects/knapsack-problem/include/ExecutionReport.h
+1554279968 /home/thiago/projects/knapsack-problem/include/ExecutionReport.h
 	<iostream>
 	<vector>
 	<string>
+	<config.h>
 	<Knapsack.h>
 
-1553858964 source:/home/thiago/projects/knapsack-problem/src/CanonicalGA.cpp
+1554279968 source:/home/thiago/projects/knapsack-problem/src/CanonicalGA.cpp
 	"../include/CanonicalGA.h"
 	<RandomHelper.h>
 	<iostream>
@@ -68,10 +71,10 @@
 	<cstdlib>
 	<cmath>
 
-1553863946 source:/home/thiago/projects/knapsack-problem/src/ExecutionReport.cpp
+1554279968 source:/home/thiago/projects/knapsack-problem/src/ExecutionReport.cpp
 	"ExecutionReport.h"
 
-1553703263 source:/home/thiago/projects/knapsack-problem/src/Fitness.cpp
+1554279968 source:/home/thiago/projects/knapsack-problem/src/Fitness.cpp
 	"Fitness.h"
 
 1554232911 source:c:\users\140688330213\documents\my-systems\knapsack-problem\main.cpp
@@ -154,14 +157,14 @@
 	<CanonicalGA.h>
 	<vector>
 
-1553963518 source:/home/thiago/projects/knapsack-problem/src/CGABenchmarking.cpp
+1554279968 source:/home/thiago/projects/knapsack-problem/src/CGABenchmarking.cpp
 	"CGABenchmarking.h"
 	<string>
 	<vector>
 	<iostream>
 	<fstream>
 
-1553962572 /home/thiago/projects/knapsack-problem/include/CGABenchmarking.h
+1554279968 /home/thiago/projects/knapsack-problem/include/CGABenchmarking.h
 	<CanonicalGA.h>
 	<vector>
 
@@ -193,4 +196,34 @@
 
 1554223850 c:\users\140688330213\documents\my-systems\knapsack-problem\include-integer\integerpopulation.h
 	<Population.h>
+
+1554279968 /home/thiago/projects/knapsack-problem/include/config.h
+
+1554284308 /home/thiago/projects/knapsack-problem/include/BinaryPopulation.h
+	<Population.h>
+
+1554296938 /home/thiago/projects/knapsack-problem/include-integer/IntegerGA.h
+	<IntegerPopulation.h>
+	<ExecutionReport.h>
+
+1554295459 /home/thiago/projects/knapsack-problem/include-integer/IntegerPopulation.h
+	<Population.h>
+
+1554297518 source:/home/thiago/projects/knapsack-problem/src-integer/IntegerGA.cpp
+	"IntegerGA.h"
+	<Fitness.h>
+	<RandomHelper.h>
+
+1554284603 source:/home/thiago/projects/knapsack-problem/src/BinaryPopulation.cpp
+	"../include/BinaryPopulation.h"
+	<stdlib.h>
+	<stdint.h>
+	<iostream>
+	"../include/RandomHelper.h"
+
+1554298141 source:/home/thiago/projects/knapsack-problem/src-integer/IntegerPopulation.cpp
+	"IntegerPopulation.h"
+	<iostream>
+	<algorithm>
+	<RandomHelper.h>
 
