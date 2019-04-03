@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
         IntegerPopulation integerPopulation;
         IntegerGA integerGA(knapsack, integerPopulation);
         ExecutionReport report = integerGA.executeEvolution();
-        report.print();
+        report.printInteger();
     }
 
     return 0;

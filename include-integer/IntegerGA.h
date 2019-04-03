@@ -1,6 +1,8 @@
 #ifndef INTEGERGA_H
 #define INTEGERGA_H
 
+#define MAX_GENERATIONS 500
+
 #include <IntegerPopulation.h>
 #include <ExecutionReport.h>
 

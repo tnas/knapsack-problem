@@ -9,10 +9,6 @@ static vector<vector<int>> individuals;
 static Knapsack knapsackInstance;
 static RandomHelper randomHelper;
 
-IntegerPopulation::IntegerPopulation()
-{
-}
-
 IntegerPopulation::~IntegerPopulation()
 {
 }
@@ -27,6 +23,7 @@ bool isItemInKnapsack(unsigned int item, vector<int> indiv)
 
 vector<vector<int>> IntegerPopulation::create(Knapsack knapsack)
 {
+    vector<vector<int>> firstGeneration;
     knapsackInstance = knapsack;
     unsigned int totalWeight;
     this->setIndividualSize(knapsack.getMaxNumberOfItens());
@@ -51,10 +48,10 @@ vector<vector<int>> IntegerPopulation::create(Knapsack knapsack)
             }
         } while (totalWeight <= knapsack.getCapacity());
 
-        individuals.push_back(indiv);
+        firstGeneration.push_back(indiv);
     }
 
-    return individuals;
+    return firstGeneration;
 }
 
 void Population::makeMutation(vector<int> individual, int allele)
@@ -65,8 +62,7 @@ void Population::makeMutation(vector<int> individual, int allele)
 
 bool Population::isAlleleExchangeable()
 {
-    //return randomHelper.getRandomBetween0and1() < CROSSOVER_PROBABILITY;
-    return true;
+    return randomHelper.getRandomBetween0and1() < CROSSOVER_PROBABILITY;
 }
 
 void makeRandomSwap(vector<int>& individual)
@@ -90,6 +86,7 @@ void makeRandomSwap(vector<int>& individual)
 unsigned int runPMXMapping(vector<pmx_map> pmxOptions, unsigned int item)
 {
     bool permuted = false;
+    vector<pmx_map> updatedOptions;
 
     for (pmx_map option : pmxOptions)
     {
@@ -105,15 +102,13 @@ unsigned int runPMXMapping(vector<pmx_map> pmxOptions, unsigned int item)
             option.visited = true;
             permuted = true;
         }
-        else
-        {
-            return item;
-        }
+
+        updatedOptions.push_back(option);
     }
 
     if (permuted)
     {
-        runPMXMapping(pmxOptions, item);
+        runPMXMapping(updatedOptions, item);
     }
 
     return item;
@@ -123,13 +118,15 @@ vector<int> generatePMXChild(vector<int> stParent, vector<int> ndParent,
     vector<pmx_map> pmxOptions, unsigned int stCXBegin, unsigned int stCXEnd)
 {
     vector<int> child(stParent);
-    unsigned int allele;
+    unsigned int allele, pmx;
     unsigned int stParentSize = stParent.size();
     unsigned int ndParentSize = ndParent.size();
 
     for (allele = 0; allele < stCXBegin; ++allele)
     {
-        child.at(allele) = runPMXMapping(pmxOptions, stParent.at(allele));
+        pmx = runPMXMapping(pmxOptions, stParent.at(allele));
+        cout << "from: " << stParent.at(allele) << " -> to: " << pmx << endl;
+        child.at(allele) = pmx;
     }
 
     for (allele = stCXBegin; allele <= stCXEnd; ++allele)
@@ -137,9 +134,11 @@ vector<int> generatePMXChild(vector<int> stParent, vector<int> ndParent,
         child.at(allele) = ndParent.at(allele % ndParentSize);
     }
 
-    for (allele = stCXEnd; allele < stParentSize; ++allele)
+    for (allele = stCXEnd + 1; allele < stParentSize; ++allele)
     {
-        child.at(allele) = runPMXMapping(pmxOptions, stParent.at(allele));
+        pmx = runPMXMapping(pmxOptions, stParent.at(allele));
+        cout << "from: " << stParent.at(allele) << " -> to: " << pmx << endl;
+        child.at(allele) = pmx;
     }
 
     return child;
@@ -152,14 +151,28 @@ vector<vector<int>> IntegerPopulation::reproduce(int first, int second)
         stParentSize, ndParentSize, allele, temp;
     vector<pmx_map> pmxOptions;
 
-    stParentSize  = getIndividual(first).size() - 1;
-    ndParentSize  = getIndividual(second).size() - 1;
+    cout << "Population before reproduction: " << endl;
+    show(individuals);
 
-    stCXBegin = randomHelper.getRandomBetweenZeroTo(stParentSize);
+    if (getIndividual(first).size() > getIndividual(second).size())
+    {
+        temp = first;
+        first = second;
+        second = temp;
+    }
+
+    stParentSize  = getIndividual(first).size();
+    ndParentSize  = getIndividual(second).size();
+
+    cout << "stParent: " << first << " - ndParent: " << second << endl;
+    showIndividual(getIndividual(first));
+    showIndividual(getIndividual(second));
+
+    stCXBegin = randomHelper.getRandomBetweenZeroTo(stParentSize - 1);
 
     do
     {
-        stCXEnd = randomHelper.getRandomBetweenZeroTo(stParentSize);
+        stCXEnd = randomHelper.getRandomBetweenZeroTo(stParentSize - 1);
     } while (stCXEnd == stCXBegin);
 
     if (stCXBegin > stCXEnd)
@@ -172,10 +185,14 @@ vector<vector<int>> IntegerPopulation::reproduce(int first, int second)
     ndCXBegin = stCXBegin % ndParentSize;
     ndCXEnd   = stCXEnd % ndParentSize;
 
+    cout << "Section [stB, stE, ndB, ndE] = " <<
+        stCXBegin << stCXEnd << ndCXBegin << ndCXEnd << endl;
+
     vector<vector<int>> generation;
     vector<int> stParent = individuals.at(first);
     vector<int> ndParent = individuals.at(second);
 
+    cout << "Section: " << endl;
     for (allele = stCXBegin; allele <= stCXEnd; ++allele)
     {
         pmx_map option;
@@ -183,13 +200,18 @@ vector<vector<int>> IntegerPopulation::reproduce(int first, int second)
         option.to   = ndParent.at(allele % ndParentSize);
         option.visited = false;
         pmxOptions.push_back(option);
+        cout << "[" << option.from << "," << option.to << "]" << endl;
     }
 
     vector<int> stChild = generatePMXChild(stParent, ndParent, pmxOptions,
         stCXBegin, stCXEnd);
+    cout << "PMX child 1: " << endl;
+    this->showIndividual(stChild);
 
     vector<int> ndChild = generatePMXChild(ndParent, stParent, pmxOptions,
         ndCXBegin, ndCXEnd);
+    cout << "PMX child 2: " << endl;
+    this->showIndividual(ndChild);
 
     makeRandomSwap(stChild);
     makeRandomSwap(ndChild);
@@ -240,4 +262,14 @@ void Population::show(vector<vector<int>> generation)
 
         cout << endl;
     }
+}
+
+void IntegerPopulation::showIndividual(vector<int> indiv)
+{
+    for (int item : indiv)
+    {
+        cout << item << " ";
+    }
+
+    cout << endl;
 }

@@ -27,12 +27,14 @@ class ExecutionReport
         unsigned int getNumberOfGenerations();
         unsigned int getKnapsackWeight();
         unsigned int getNumberOfAllelesOn();
+        unsigned int getChromosomeSize();
         unsigned int getPopulationSize();
         string getInfeasiblesPolicy();
         void setNumberOfGenerations(unsigned int numberOfGenerations);
         void setSizeOfPopulation(unsigned int populationSize);
         void setInfeasiblesPolicy(InfeasiblesPolicy policy);
         string print();
+        string printInteger();
         void printCompactedFormat();
 };
 

@@ -9,6 +9,7 @@ IntegerGA::IntegerGA(Knapsack knapsack, IntegerPopulation population)
 {
     this->population = population;
     this->knapsack = knapsack;
+    this->generationsLimit = MAX_GENERATIONS;
 }
 
 IntegerGA::~IntegerGA()
@@ -107,29 +108,48 @@ void IntegerGA::repairInfeasibleIndividual(vector<int> &indiv)
         allelesEvaluation.push_back(Fitness(*it, value, weight));
     }
 
-    sort(fitnessStatus.begin(), fitnessStatus.end());
+    sort(allelesEvaluation.begin(), allelesEvaluation.end());
 
-    for (vector<Fitness>::iterator itFit = allelesEvaluation.begin();
-            itFit != allelesEvaluation.end() && totalWeight > this->knapsack.getCapacity();
-            ++itFit)
+    indiv.clear();
+
+    vector<Fitness>::iterator itFit;
+    for (itFit = allelesEvaluation.begin();
+         itFit != allelesEvaluation.end() && totalWeight > this->knapsack.getCapacity();
+         ++itFit)
     {
-        Fitness alleleFit = *itFit;
-
-        indiv.erase(indiv.begin() + alleleFit.getId());
-        totalWeight -= alleleFit.getWeight();
+        totalWeight -= (*itFit).getWeight();
+//        cout << "Fixing weight: " << totalWeight << endl;
     }
+
+    for (; itFit != allelesEvaluation.end(); ++itFit)
+    {
+        indiv.push_back((*itFit).getId());
+    }
+
+//    cout << "Fixed child: " << endl;
+//    this->population.showIndividual(indiv);
 }
 
 void IntegerGA::moderateGeneration(vector<vector<int>> &generation)
 {
     vector<vector<int>>::iterator it;
 
+    unsigned int item = 0;
     for (it = generation.begin(); it != generation.end(); ++it)
     {
+        // Removing duplicates
+        vector<int> indiv = *it;
+        sort(indiv.begin(), indiv.end());
+        indiv.erase(unique(indiv.begin(), indiv.end()), indiv.end());
+
         if (!this->isKnapsackFeasible(*it))
         {
+//            cout << "Repairing child " << item << endl;
+//            this->population.showIndividual(*it);
             this->repairInfeasibleIndividual(*it);
         }
+
+        ++item;
     }
 }
 
@@ -137,25 +157,29 @@ ExecutionReport IntegerGA::executeEvolution()
 {
     vector<vector<int>> generation;
     unsigned int generationNumber, stIndiv, ndIndiv, pos;
-    int selecteds[this->population.getThreshold()];
     unsigned int bestFitnessValue = 0;
     vector<int> bestChromosome;
 
     this->population.setThreshold(4);
-    this->knapsack.setCapacity(50);
-    this->generationsLimit = 1;
+//    this->knapsack.setCapacity(50);
+    this->generationsLimit = 10;
 
     generation = this->population.create(this->knapsack);
-    this->population.show(generation);
+    this->moderateGeneration(generation);
+    this->population.addIndividuals(generation);
+//    this->population.show(generation);
 
     this->runFitnessEvaluation();
-    printFitness();
+//    printFitness();
 
     generationNumber = 0;
     Fitness bestFromGeneration;
+    int selecteds[this->population.getThreshold()];
 
     while (generationNumber < this->generationsLimit)
     {
+        generation.clear();
+
         for (unsigned int select = 0; select < this->population.getThreshold(); select+=2)
         {
             do
@@ -165,19 +189,19 @@ ExecutionReport IntegerGA::executeEvolution()
             }
             while (stIndiv == ndIndiv);
 
-            cout << "Roulette: " << stIndiv << " - " << ndIndiv << endl;
+//            cout << "Roulette: " << stIndiv << " - " << ndIndiv << endl;
 
             generation = this->population.reproduce(stIndiv, ndIndiv);
-            cout << "Offspring: " << endl;
-            this->population.show(generation);
+//            cout << "Offspring: " << endl;
+            //this->population.show(generation);
 
             this->moderateGeneration(generation);
-            cout << "Moderated Offspring: " << endl;
-            this->population.show(generation);
+//            cout << "Moderated Offspring: " << endl;
+            //this->population.show(generation);
 
             this->population.addIndividuals(generation);
-            cout << "New Generation: " << endl;
-            this->population.show(generation);
+//            cout << "New Generation: " << endl;
+            //this->population.show(generation);
         }
 
         this->runFitnessEvaluation();
@@ -204,11 +228,12 @@ ExecutionReport IntegerGA::executeEvolution()
 
         this->population.shrink(selecteds);
 
+//        cout << "generation: " << generationNumber << endl;
         ++generationNumber;
-
     }
 
-    ExecutionReport report;
+    ExecutionReport report(this->knapsack, bestChromosome);
+    report.setInfeasiblesPolicy(InfeasiblesPolicy::Repair);
     report.setNumberOfGenerations(generationNumber);
     report.setSizeOfPopulation(this->population.getThreshold());
 

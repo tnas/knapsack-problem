@@ -17,25 +17,14 @@ ExecutionReport::~ExecutionReport()
 {
 }
 
-unsigned int* getKnapsackInstance(vector<int> chromosome)
-{
-    unsigned int instanceSize = chromosome.size();
-    unsigned int* instance = new unsigned int[instanceSize];
-
-    for (unsigned int pos = 0; pos < instanceSize; ++pos)
-    {
-        instance[pos] = chromosome.at(pos);
-    }
-
-    return instance;
-}
-
 unsigned int ExecutionReport::getFitnessValue()
 {
-    unsigned int value;
-    unsigned int* instance = getKnapsackInstance(this->chromosome);
-    value = this->knapsack.evaluateValue(instance, this->chromosomeSize);
-    delete instance;
+    unsigned int value = 0;
+
+    for (int item : this->chromosome)
+    {
+        value += this->knapsack.getItemValue(item);
+    }
 
     return value;
 }
@@ -52,18 +41,23 @@ void ExecutionReport::setNumberOfGenerations(unsigned int numberOfGenerations)
 
 unsigned int ExecutionReport::getKnapsackWeight()
 {
-    unsigned int value;
-    unsigned int* instance = getKnapsackInstance(this->chromosome);
-    value = this->knapsack.evaluateWeight(instance, this->chromosomeSize);
-    delete instance;
+    unsigned int value = 0;
 
+    for (int item : this->chromosome)
+    {
+        value += this->knapsack.getItemWeight(item);
+    }
     return value;
-
 }
 
 unsigned int ExecutionReport::getNumberOfAllelesOn()
 {
     return this->numberOfAllelesOn;
+}
+
+unsigned int ExecutionReport::getChromosomeSize()
+{
+    return this->chromosomeSize;
 }
 
 unsigned int ExecutionReport::getPopulationSize()
@@ -130,6 +124,47 @@ string ExecutionReport::print()
 
     output.append(string("Number of Items: "));
     output.append(string(to_string(this->numberOfAllelesOn)));
+    output.append(string("\n"));
+
+    cout << output;
+
+    return output;
+}
+
+string ExecutionReport::printInteger()
+{
+    string output;
+
+    output.append(string("["));
+    output.append(string("Infeasibles Policy: "));
+    output.append(this->infeasiblesPolicy);
+    output.append(string(", "));
+
+    output.append(string("Number of Generations: "));
+    output.append(string(to_string(this->numberOfGenerations)));
+    output.append(string(", "));
+
+    output.append(string("Population Size: "));
+    output.append(string(to_string(this->sizeOfPopulation)));
+    output.append(string("]\n"));
+
+    output.append(string("Best Chromosome: "));
+    for (unsigned int pos = 0; pos < this->chromosomeSize; ++pos)
+    {
+        output.append(string(to_string(this->chromosome[pos])));
+        output.append(string(" "));
+    }
+
+    output.append(string("\nFitness Value: "));
+    output.append(string(to_string(this->getFitnessValue())));
+    output.append(string("\n"));
+
+    output.append(string("Knapsack Weight: "));
+    output.append(string(to_string(this->getKnapsackWeight())));
+    output.append(string("\n"));
+
+    output.append(string("Number of Items: "));
+    output.append(string(to_string(this->getChromosomeSize())));
     output.append(string("\n"));
 
     cout << output;

@@ -4,6 +4,7 @@
 #include <vector>
 #include <Knapsack.h>
 
+#define DEFAULT_THRESHOLD 100
 #define CROSSOVER_PROBABILITY 0.9
 #define MUTATION_PROPABILITY  0.1
 

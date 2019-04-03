@@ -3,8 +3,6 @@
 
 #include <Population.h>
 
-#define DEFAULT_THRESHOLD 100
-
 using namespace std;
 
 class BinaryPopulation : public Population
