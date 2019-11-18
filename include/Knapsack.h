@@ -1,16 +1,21 @@
 #ifndef KNAPSACK_H
 #define KNAPSACK_H
 
-#define DEFAULT_CAPACITY 120
+#include "Population.h"
+#include <string.h>
+#include <limits>
 
 class Knapsack
 {
     unsigned int capacity;
+    unsigned int nShelves;
+    unsigned int* shelvesCapacity;
 
     public:
         Knapsack();
         Knapsack(unsigned int capacity);
-        virtual ~Knapsack();
+        Knapsack(unsigned int capacity, unsigned int nShelves, unsigned int* shelvesCapacity);
+        ~Knapsack();
         bool isFeasible(unsigned int* instance, unsigned int size);
         unsigned int evaluateWeight(unsigned int* instance, unsigned int size);
         unsigned int evaluateValue(unsigned int* instance, unsigned int size);

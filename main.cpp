@@ -6,8 +6,6 @@
 #include "include/Population.h"
 #include "include/CGABenchmarking.h"
 
-using namespace std;
-
 /*
  * Compiler parameters: -Wall -fexceptions -g -std=c++14 -O3
  */
@@ -59,7 +57,7 @@ int main(int argc, char* argv[])
         canonicalGA.setPopulationSize(populationSize);
         canonicalGA.setInfeasiblesPolicy(infeasiblePolicy);
         ExecutionReport report = canonicalGA.executeEvolution();
-        report.print();
+        //report.print();
     }
 
     return 0;

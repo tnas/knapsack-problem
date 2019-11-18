@@ -2,6 +2,8 @@
 #define POPULATION_H
 
 #include <vector>
+#include <sstream>
+#include <bitset>
 
 #define CROSSOVER_PROBABILITY 0.9
 #define MUTATION_PROPABILITY  0.1
@@ -18,6 +20,9 @@ class Population
     float mutationProbaility;
 
     public:
+
+        static unsigned int individualToKnapsack(unsigned int* individual, unsigned int indivSize, unsigned int* instance);
+
         Population(): threshold(DEFAULT_THRESHOLD), offspringSize(DEFAULT_THRESHOLD),
             crossoverProbability(CROSSOVER_PROBABILITY), mutationProbaility(MUTATION_PROPABILITY){};
         Population(int threshold, int offspringSize): threshold(threshold),

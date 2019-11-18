@@ -197,9 +197,10 @@ ExecutionReport CanonicalGA::executeEvolution()
     vector<vector<int>>::iterator itChild;
 
     generation = this->population.create(this->knapsack.getMaxNumberOfItens());
-    this->moderateGeneration(generation);
+    this->population.show(generation);
+    /*
+    this->moderateGeneration(generation); // avoiding infeasibilities
     this->population.addIndividuals(generation);
-
     this->runFitnessEvaluation();
 
     unsigned int generationNumber = 0;
@@ -223,12 +224,11 @@ ExecutionReport CanonicalGA::executeEvolution()
             } while (stIndiv == ndIndiv);
 
             generation = this->population.reproduce(stIndiv, ndIndiv);
-            this->moderateGeneration(generation);
+            this->moderateGeneration(generation); // avoiding infeasibilities
             this->population.addIndividuals(generation);
         }
 
         this->runFitnessEvaluation();
-
         sort(fitnessStatus.begin(), fitnessStatus.end(), greater<Fitness>());
 
         pos = 0;
@@ -258,6 +258,10 @@ ExecutionReport CanonicalGA::executeEvolution()
     report.setSizeOfPopulation(this->population.getThreshold());
     report.setInfeasiblesPolicy(this->infeasiblesPolicy);
 
+    return report;
+    */
+
+    ExecutionReport report;
     return report;
 }
 

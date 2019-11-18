@@ -1,39 +1,72 @@
 #include "../include/Knapsack.h"
 
-#define NUM_ITENS 42
+#define NUM_ITENS 20
+#define DEFAULT_CAPACITY 510
+#define DEFAULT_NUMBER_SHELVES 3
+#define NO_SHELF 0
+#define SHELF1_CAPACITY 240
+#define SHELF2_CAPACITY 190
+#define SHELF3_CAPACITY 170
 
 int itensWeight[NUM_ITENS] = {
-    3, 8, 12, 2, 8, 4, 4, 5, 1, 1, 8, 6, 4, 3, 3,
-    5, 7, 3, 5, 7, 4, 3, 7, 2, 3, 5, 4, 3, 7, 19,
-    20, 21, 11, 24, 13, 17, 18, 6, 15, 25, 12, 19
+    20, 25, 14, 46, 39, 57, 58, 47, 38, 30,
+    53, 57, 38, 53, 58, 48, 14, 6, 40, 10
 };
 
 int itensValue[NUM_ITENS] = {
-    1, 3, 1, 8, 9, 3, 2, 8, 5, 1, 1, 6, 3, 2, 5,
-    2, 3, 8, 9, 3, 2, 4, 5, 4, 3, 1, 3, 2, 14, 32,
-    20, 19, 15, 37, 18, 13, 19, 10, 15, 40, 17, 39
+    7, 7, 8, 3, 5, 8, 1, 4, 9, 7,
+    10, 8, 7, 1, 7, 9, 3, 2, 4, 2
 };
 
 Knapsack::Knapsack()
 {
     this->capacity = DEFAULT_CAPACITY;
+    this->nShelves = DEFAULT_NUMBER_SHELVES + 1; // zero position to NO_SHELF
+    this->shelvesCapacity = new unsigned int[this->nShelves]();
+    this->shelvesCapacity[0] = NO_SHELF;
+    this->shelvesCapacity[1] = SHELF1_CAPACITY;
+    this->shelvesCapacity[2] = SHELF2_CAPACITY;
+    this->shelvesCapacity[3] = SHELF3_CAPACITY;
 }
 
 Knapsack::Knapsack(unsigned int capacity)
 {
     this->capacity = capacity;
+    this->shelvesCapacity = nullptr;
+}
+
+Knapsack::Knapsack(unsigned int capacity, unsigned int nShelves, unsigned int* shelvesCapacity)
+{
+    this->capacity = capacity;
+    this->nShelves = nShelves;
+    this->shelvesCapacity = shelvesCapacity;
 }
 
 Knapsack::~Knapsack()
 {
+    if (this->shelvesCapacity != nullptr) delete(this->shelvesCapacity);
 }
 
 unsigned int Knapsack::evaluateWeight(unsigned int* instance, unsigned int size)
 {
     unsigned int totalWeight = 0;
+    //unsigned int* shelfWeight = new unsigned int[this->nShelves]();
+    //memset(shelfWeight, 0, this->nShelves*sizeof(*shelfWeight));
 
-    for (unsigned int pos = 0; pos < size; ++pos)
-        totalWeight += instance[pos] * itensWeight[pos];
+    unsigned int* solution;
+    unsigned int solSize = Population::individualToKnapsack(instance, size, solution);
+
+    for (unsigned int obj = 0; obj < solSize; ++obj)
+    {
+        if (solution[obj] != 0)
+        {
+            totalWeight += itensWeight[obj];
+            //shelfWeight[solution[obj]] += itensWeight[obj];
+        }
+    }
+
+    delete(solution);
+    //delete(shelfWeight);
 
     return totalWeight;
 }
@@ -41,9 +74,15 @@ unsigned int Knapsack::evaluateWeight(unsigned int* instance, unsigned int size)
 unsigned int Knapsack::evaluateValue(unsigned int* instance, unsigned int size)
 {
     unsigned int totalValue = 0;
+    unsigned int* solution;
+    unsigned int solSize = Population::individualToKnapsack(instance, size, solution);
 
-    for (unsigned int pos = 0; pos < size; ++pos)
-        totalValue += instance[pos] * itensValue[pos];
+    for (unsigned int pos = 0; pos < solSize; ++pos)
+    {
+        if (solution[pos] != 0) totalValue += itensValue[pos];
+    }
+
+    delete(solution);
 
     return totalValue;
 }
