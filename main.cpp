@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
         canonicalGA.setPopulationSize(populationSize);
         canonicalGA.setInfeasiblesPolicy(infeasiblePolicy);
         ExecutionReport report = canonicalGA.executeEvolution();
-        //report.print();
+        report.print();
     }
 
     return 0;

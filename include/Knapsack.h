@@ -22,12 +22,16 @@ class Knapsack
         bool isFeasible(vector<int> instance);
         unsigned int evaluateWeight(unsigned int* instance, unsigned int size);
         unsigned int evaluateValue(unsigned int* instance, unsigned int size);
+        void evaluateWeightValue(vector<int>instance, unsigned int& indivWeight, unsigned int& indivValue);
+        void evaluateWeightValue(vector<int>instance, unsigned int& indivWeight, unsigned int& indivValue, unsigned int*& shelfWeight);
         int getMaxNumberOfItens();
         int getItemWeight(int item);
         int getItemValue(int item);
         unsigned int getCapacity();
         unsigned int getMaximumWeight();
         void setCapacity(unsigned int capacity);
+        unsigned int getNumberOfShelves();
+        unsigned int* getShelvesCapacity();
 
     protected:
 

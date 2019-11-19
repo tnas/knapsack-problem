@@ -22,15 +22,16 @@ class Population
 
     public:
 
-        static unsigned int individualToKnapsack(unsigned int* individual, unsigned int indivSize, unsigned int* instance);
-        static unsigned int individualToKnapsack(vector<int> individual, unsigned int* instance);
+        static unsigned int individualToKnapsack(unsigned int* individual, unsigned int indivSize, unsigned int*& instance);
+        static unsigned int individualToKnapsack(vector<int> individual, unsigned int*& instance);
+        static void defineAllelesAt(vector<int>& individual, unsigned int pos, int value);
 
         Population(): threshold(DEFAULT_THRESHOLD), offspringSize(DEFAULT_THRESHOLD),
             crossoverProbability(CROSSOVER_PROBABILITY), mutationProbaility(MUTATION_PROPABILITY){};
         Population(int threshold, int offspringSize): threshold(threshold),
             offspringSize(offspringSize){};
         virtual ~Population();
-        vector<vector<int>> create(int individualSize);
+        vector<vector<int>> create(unsigned int individualSize);
         vector<vector<int>> reproduce(int first, int second);
         void addIndividual(vector<int> individual);
         void addIndividuals(vector<vector<int>> indivs);

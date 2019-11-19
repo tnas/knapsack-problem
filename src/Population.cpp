@@ -7,27 +7,32 @@ static vector<vector<int>> individuals;
 static RandomHelper randomHelper;
 
 
-unsigned int Population::individualToKnapsack(unsigned int* individual, unsigned int indivSize, unsigned int* instance)
+unsigned int Population::individualToKnapsack(unsigned int* individual, unsigned int indivSize, unsigned int*& instance)
 {
 
     unsigned int instanceSize = indivSize/2;
     instance = new unsigned int[instanceSize]();
 
-    for (unsigned int pos = 0; pos < indivSize; ++pos)
+    for (unsigned int pos = 0; pos < instanceSize; ++pos)
         instance[pos] = stoi(to_string(individual[2*pos]) +
                              to_string(individual[2*pos+1]), nullptr, 2);
     return instanceSize;
 }
 
-unsigned int Population::individualToKnapsack(vector<int>individual, unsigned int* instance)
+unsigned int Population::individualToKnapsack(vector<int> individual, unsigned int*& instance)
 {
     unsigned int instanceSize = individual.size()/2;
     instance = new unsigned int[instanceSize]();
 
-    for (unsigned int pos = 0; pos < individual.size(); ++pos)
+    for (unsigned int pos = 0; pos < instanceSize; ++pos)
         instance[pos] = stoi(to_string(individual.at(2*pos)) +
                              to_string(individual.at(2*pos+1)), nullptr, 2);
     return instanceSize;
+}
+
+void Population::defineAllelesAt(vector<int>& individual, unsigned int pos, int value)
+{
+    individual.at(2*pos) = individual.at(2*pos+1) = value;
 }
 
 Population::~Population()
@@ -53,7 +58,7 @@ void Population::setOffspringSize(int size)
  10 -> individual is in the shelf 2
  11 -> individual is in the shelf 3
  */
-vector<vector<int>> Population::create(int individualSize)
+vector<vector<int>> Population::create(unsigned int individualSize)
 {
     this->individualSize = individualSize*2; // binary representation
     vector<vector<int>> firstGeneration;
@@ -62,7 +67,7 @@ vector<vector<int>> Population::create(int individualSize)
     {
         vector<int> individual;
 
-        for (unsigned int allele = 0; allele < this->individualSize; ++allele)
+        for (unsigned int allele = 0; allele < individualSize; ++allele)
         {
             string binaryShelf = bitset<2>(randomHelper.getRandomBetweenZeroTo(3)).to_string();
             individual.push_back(stoi(binaryShelf.substr(0,1)));
@@ -189,9 +194,11 @@ int Population::getCurrentSize()
 
 void Population::showIndividual(vector<int> indiv)
 {
-    for (unsigned int allele : indiv)
+    for (unsigned int allele = 0; allele < this->individualSize/2; ++allele)
     {
-        cout << allele << " ";
+        string binaryIndiv = to_string(indiv.at(2*allele)) + to_string(indiv.at(2*allele+1));
+
+        cout << stoi(binaryIndiv, nullptr, 2) << " ";
     }
 
     cout << endl;
@@ -200,16 +207,7 @@ void Population::showIndividual(vector<int> indiv)
 void Population::show(vector<vector<int>> generation)
 {
     for (vector<int> indiv : generation)
-    {
-        for (unsigned int allele = 0; allele < this->individualSize; ++allele)
-        {
-            string binaryIndiv = to_string(indiv.at(2*allele)) + to_string(indiv.at(2*allele+1));
-
-            cout << stoi(binaryIndiv, nullptr, 2) << " ";
-        }
-
-        cout << endl;
-    }
+        this->showIndividual(indiv);
 }
 
 void Population::show()

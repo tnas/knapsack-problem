@@ -9,24 +9,13 @@ void CanonicalGA::runFitnessEvaluation()
 {
     fitnessStatus.clear();
     int populationSize = this->population.getCurrentSize();
-    unsigned int instanceSize = this->population.getIndividualSize();
-    unsigned weight;
-    int value;
+    unsigned weight, value;
     vector<int> individual;
-
-    unsigned int* instance = new unsigned int[instanceSize]();
 
     for (int indiv = 0; indiv < populationSize; ++indiv)
     {
         individual = this->population.getIndividual(indiv);
-
-        for (unsigned int item = 0; item < instanceSize; ++item)
-        {
-            instance[item] = individual.at(item);
-        }
-
-        value  = this->knapsack.evaluateValue(instance, instanceSize);
-        weight = this->knapsack.evaluateWeight(instance, instanceSize);
+        this->knapsack.evaluateWeightValue(individual, weight, value);
 
         if (this->infeasiblesPolicy == InfeasiblesPolicy::Penalize &&
             (!this->knapsack.isFeasible(individual)))
@@ -37,8 +26,6 @@ void CanonicalGA::runFitnessEvaluation()
 
         fitnessStatus.push_back(Fitness(indiv, value, weight));
     }
-
-    delete(instance);
 }
 
 void CanonicalGA::printFitness(Population population)
@@ -80,7 +67,7 @@ int CanonicalGA::runRouletteWhellSelection()
     return ithIndiv;
 }
 
-void CanonicalGA::moderateGeneration(vector<vector<int>> &generation)
+void CanonicalGA::moderateGeneration(vector<vector<int>>& generation)
 {
     vector<vector<int>>::iterator it;
 
@@ -90,13 +77,18 @@ void CanonicalGA::moderateGeneration(vector<vector<int>> &generation)
         {
             if (!this->knapsack.isFeasible(*it))
             {
+                cout << "Infeasible!!!" << endl << "Before repairing: ";
+                this->population.showIndividual(*it);
                 this->repairInfeasibleIndividual(*it);
+                cout << endl << "After repairing: ";
+                this->population.showIndividual(*it);
+                cout << endl;
             }
         }
     }
 }
 
-void CanonicalGA::repairInfeasibleIndividual(vector<int> &indiv)
+void CanonicalGA::repairInfeasibleIndividual(vector<int>& indiv)
 {
     vector<int>::iterator it;
     vector<Fitness> allelesEvaluation;
@@ -106,9 +98,10 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int> &indiv)
 
     for (it = indiv.begin(); it != indiv.end(); ++it)
     {
-        int allele = *it;
+        int stAllele = *it;
+        int ndAllele = *(++it);
 
-        if (allele == 0)
+        if (stAllele == 0 && ndAllele == 0)
         {
             value = weight = 0;
         }
@@ -132,31 +125,39 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int> &indiv)
         Fitness alleleFit = *itFit;
         if (alleleFit.getValue() == 0) continue;
 
-        indiv.at(alleleFit.getId()) = 0;
+        Population::defineAllelesAt(indiv, alleleFit.getId(), 0);
         totalWeight -= alleleFit.getWeight();
     }
 }
 
-/**
- * https://arxiv.org/pdf/1610.00976.pdf
- */
 unsigned int CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)
 {
-    vector<int>::iterator it;
-    unsigned int indivWeight, indivValue, pos;
-
-    indivWeight = indivValue = pos = 0;
-
-    for (it = indiv.begin(); it != indiv.end(); ++it, ++pos)
-    {
-        indivWeight += this->knapsack.getItemWeight(pos) * (*it);
-        indivValue += this->knapsack.getItemValue(pos) * (*it);
-    }
+    unsigned int indivWeight, indivValue, nShelves;
+    nShelves = this->knapsack.getNumberOfShelves();
+    unsigned int* shelfWeight = new unsigned int[nShelves]();
+    this->knapsack.evaluateWeightValue(indiv, indivWeight, indivValue, shelfWeight);
 
     double fIndivWeight = indivWeight;
     double fIndivValue = indivValue;
     double fCapacity = this->knapsack.getCapacity();
-    double normPenaltyFactor = ((double)(fCapacity/(fIndivWeight + fCapacity)));
+    double normPenaltyFactor = 0;
+
+    if (fIndivWeight <= fCapacity)
+    {
+        fCapacity = fIndivWeight = 0;
+
+        for (unsigned int shelf = 1; shelf < nShelves; ++shelf)
+        {
+            if (shelfWeight[shelf] > this->knapsack.getShelvesCapacity()[shelf])
+            {
+                fCapacity += this->knapsack.getShelvesCapacity()[shelf];
+                fIndivWeight += shelfWeight[shelf];
+            }
+        }
+    }
+
+    delete(shelfWeight);
+    normPenaltyFactor = ((double)(fCapacity/(fIndivWeight + fCapacity)));
 
     return trunc(fIndivValue - (normPenaltyFactor * fIndivValue));
 }
@@ -227,8 +228,6 @@ ExecutionReport CanonicalGA::executeEvolution()
     report.setNumberOfGenerations(generationNumber);
     report.setSizeOfPopulation(this->population.getThreshold());
     report.setInfeasiblesPolicy(this->infeasiblesPolicy);
-
-    return report;
 
     return report;
 }

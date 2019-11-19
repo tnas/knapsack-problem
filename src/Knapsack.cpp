@@ -50,7 +50,7 @@ Knapsack::~Knapsack()
 unsigned int Knapsack::evaluateWeight(unsigned int* instance, unsigned int size)
 {
     unsigned int totalWeight = 0;
-    unsigned int* solution;
+    unsigned int* solution = nullptr;
     unsigned int solSize = Population::individualToKnapsack(instance, size, solution);
 
     for (unsigned int obj = 0; obj < solSize; ++obj)
@@ -69,7 +69,7 @@ unsigned int Knapsack::evaluateWeight(unsigned int* instance, unsigned int size)
 unsigned int Knapsack::evaluateValue(unsigned int* instance, unsigned int size)
 {
     unsigned int totalValue = 0;
-    unsigned int* solution;
+    unsigned int* solution = nullptr;
     unsigned int solSize = Population::individualToKnapsack(instance, size, solution);
 
     for (unsigned int pos = 0; pos < solSize; ++pos)
@@ -80,6 +80,49 @@ unsigned int Knapsack::evaluateValue(unsigned int* instance, unsigned int size)
     delete(solution);
 
     return totalValue;
+}
+
+void Knapsack::evaluateWeightValue(vector<int>instance, unsigned int& indivWeight,
+                                   unsigned int& indivValue)
+{
+    unsigned int totalWeight, totalValue;
+    totalWeight = totalValue = 0;
+    unsigned int* solution = nullptr;
+    unsigned int solSize = Population::individualToKnapsack(instance, solution);
+
+    for (unsigned int obj = 0; obj < solSize; ++obj)
+    {
+        if (solution[obj] != 0)
+        {
+            totalWeight += itensWeight[obj];
+            totalValue += itensValue[obj];
+        }
+    }
+
+    delete(solution);
+}
+
+void Knapsack::evaluateWeightValue(vector<int>instance, unsigned int& indivWeight,
+                                   unsigned int& indivValue, unsigned int*& shelfWeight)
+{
+    unsigned int totalWeight, totalValue;
+    totalWeight = totalValue = 0;
+    unsigned int* solution = nullptr;
+    unsigned int solSize = Population::individualToKnapsack(instance, solution);
+
+    memset(shelfWeight, 0, this->nShelves*sizeof(*shelfWeight));
+
+    for (unsigned int obj = 0; obj < solSize; ++obj)
+    {
+        if (solution[obj] != 0)
+        {
+            totalWeight += itensWeight[obj];
+            totalValue += itensValue[obj];
+            shelfWeight[solution[obj]] += itensWeight[obj];
+        }
+    }
+
+    delete(solution);
 }
 
 bool Knapsack::checkKnapsackIsFeasible(unsigned int* solution, unsigned int solSize)
@@ -98,9 +141,6 @@ bool Knapsack::checkKnapsackIsFeasible(unsigned int* solution, unsigned int solS
         }
     }
 
-    delete(solution);
-    delete(shelfWeight);
-
     if (totalWeight > this->capacity)
     {
         isFeasible = false;
@@ -117,19 +157,22 @@ bool Knapsack::checkKnapsackIsFeasible(unsigned int* solution, unsigned int solS
         }
     }
 
+    delete(solution);
+    delete(shelfWeight);
+
     return isFeasible;
 }
 
 bool Knapsack::isFeasible(unsigned int* instance, unsigned int size)
 {
-    unsigned int* solution;
+    unsigned int* solution = nullptr;
     unsigned int solSize = Population::individualToKnapsack(instance, size, solution);
     return checkKnapsackIsFeasible(solution, solSize);
 }
 
 bool Knapsack::isFeasible(vector<int>instance)
 {
-    unsigned int* solution;
+    unsigned int* solution = nullptr;
     unsigned int solSize = Population::individualToKnapsack(instance, solution);
     return checkKnapsackIsFeasible(solution, solSize);
 }
@@ -168,3 +211,14 @@ unsigned int Knapsack::getCapacity()
 {
     return this->capacity;
 }
+
+unsigned int Knapsack::getNumberOfShelves()
+{
+    return this->nShelves;
+}
+
+unsigned int* Knapsack::getShelvesCapacity()
+{
+    return this->shelvesCapacity;
+}
+

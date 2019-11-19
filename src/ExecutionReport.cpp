@@ -7,14 +7,23 @@ ExecutionReport::ExecutionReport(Knapsack knapsack, vector<int> chromosome)
     this->chromosome = chromosome;
     this->chromosomeSize = chromosome.size();
 
-    for (int allele : chromosome)
+    unsigned int* solution = nullptr;
+    unsigned int solSize = Population::individualToKnapsack(this->chromosome, solution);
+
+    for (unsigned int obj = 0; obj < solSize; ++obj)
     {
-        this->numberOfAllelesOn += allele;
+        if (solution[obj] != 0)
+        {
+            ++this->numberOfAllelesOn;
+        }
     }
+
+    delete(solution);
 }
 
 ExecutionReport::~ExecutionReport()
 {
+
 }
 
 unsigned int* getKnapsackInstance(vector<int> chromosome)
@@ -132,7 +141,52 @@ string ExecutionReport::print()
     output.append(string(to_string(this->numberOfAllelesOn)));
     output.append(string("\n"));
 
+    output.append("--------------------------------\n");
+    output.append("Solution Details:\n");
+    output.append(this->getShelvesDetails());
+
     cout << output;
+
+    return output;
+}
+
+string ExecutionReport::getShelvesDetails()
+{
+    string output;
+
+    unsigned int* solution = nullptr;
+    unsigned int solSize = Population::individualToKnapsack(this->chromosome, solution);
+
+    unsigned int nShelves = this->knapsack.getNumberOfShelves();
+    string* shelves = new string[nShelves];
+    unsigned int* shelvesWeight = new unsigned[nShelves];
+    unsigned int* shelvesValue = new unsigned[nShelves];
+
+    memset(shelvesWeight, 0, nShelves*sizeof(*shelvesWeight));
+    memset(shelvesValue, 0, nShelves*sizeof(*shelvesValue));
+
+    for (unsigned int obj = 0; obj < solSize; ++obj)
+    {
+        if (solution[obj] != 0)
+        {
+            shelves[solution[obj]].append(string(to_string(obj + 1)) + " ");
+            shelvesWeight[solution[obj]] += this->knapsack.getItemWeight(obj);
+            shelvesValue[solution[obj]] += this->knapsack.getItemValue(obj);
+        }
+    }
+
+    for (unsigned int shelf = 1; shelf < nShelves; ++shelf)
+    {
+        output.append("Compartment " + to_string(shelf) + " - ");
+        output.append("Weight: " + to_string(shelvesWeight[shelf]) + " - " +
+                      "Value: " + to_string(shelvesValue[shelf]) + "\n");
+        output.append("Items: " + shelves[shelf] + "\n");
+    }
+
+    delete(solution);
+    delete(shelves);
+    delete(shelvesWeight);
+    delete(shelvesValue);
 
     return output;
 }

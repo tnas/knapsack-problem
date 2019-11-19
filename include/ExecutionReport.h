@@ -6,6 +6,7 @@
 #include <string>
 #include <config.h>
 #include <Knapsack.h>
+#include <Population.h>
 
 using namespace std;
 
@@ -33,6 +34,7 @@ class ExecutionReport
         void setSizeOfPopulation(unsigned int populationSize);
         void setInfeasiblesPolicy(InfeasiblesPolicy policy);
         string print();
+        string getShelvesDetails();
         void printCompactedFormat();
 };
 
