@@ -11,12 +11,15 @@ class Knapsack
     unsigned int nShelves;
     unsigned int* shelvesCapacity;
 
+    bool checkKnapsackIsFeasible(unsigned int* solution, unsigned int solSize);
+
     public:
         Knapsack();
         Knapsack(unsigned int capacity);
         Knapsack(unsigned int capacity, unsigned int nShelves, unsigned int* shelvesCapacity);
         ~Knapsack();
         bool isFeasible(unsigned int* instance, unsigned int size);
+        bool isFeasible(vector<int> instance);
         unsigned int evaluateWeight(unsigned int* instance, unsigned int size);
         unsigned int evaluateValue(unsigned int* instance, unsigned int size);
         int getMaxNumberOfItens();

@@ -1,6 +1,8 @@
 #ifndef RANDOMHELPER_H
 #define RANDOMHELPER_H
 
+#include <time.h>
+#include <stdlib.h>
 
 class RandomHelper
 {

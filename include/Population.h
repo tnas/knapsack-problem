@@ -1,6 +1,7 @@
 #ifndef POPULATION_H
 #define POPULATION_H
 
+#include "RandomHelper.h"
 #include <vector>
 #include <sstream>
 #include <bitset>
@@ -22,6 +23,7 @@ class Population
     public:
 
         static unsigned int individualToKnapsack(unsigned int* individual, unsigned int indivSize, unsigned int* instance);
+        static unsigned int individualToKnapsack(vector<int> individual, unsigned int* instance);
 
         Population(): threshold(DEFAULT_THRESHOLD), offspringSize(DEFAULT_THRESHOLD),
             crossoverProbability(CROSSOVER_PROBABILITY), mutationProbaility(MUTATION_PROPABILITY){};

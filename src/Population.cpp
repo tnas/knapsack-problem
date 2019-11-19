@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <iostream>
-#include "../include/RandomHelper.h"
 
 static vector<vector<int>> individuals;
 static RandomHelper randomHelper;
@@ -17,6 +16,17 @@ unsigned int Population::individualToKnapsack(unsigned int* individual, unsigned
     for (unsigned int pos = 0; pos < indivSize; ++pos)
         instance[pos] = stoi(to_string(individual[2*pos]) +
                              to_string(individual[2*pos+1]), nullptr, 2);
+    return instanceSize;
+}
+
+unsigned int Population::individualToKnapsack(vector<int>individual, unsigned int* instance)
+{
+    unsigned int instanceSize = individual.size()/2;
+    instance = new unsigned int[instanceSize]();
+
+    for (unsigned int pos = 0; pos < individual.size(); ++pos)
+        instance[pos] = stoi(to_string(individual.at(2*pos)) +
+                             to_string(individual.at(2*pos+1)), nullptr, 2);
     return instanceSize;
 }
 

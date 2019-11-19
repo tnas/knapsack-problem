@@ -1,36 +1,8 @@
 #include "../include/CanonicalGA.h"
-#include <RandomHelper.h>
-#include <iostream>
-#include <vector>
-#include <cstdlib>
-#include <cmath>
-
-using namespace std;
-
-static vector<Fitness> fitnessStatus;
-static RandomHelper randomHelper;
 
 CanonicalGA::~CanonicalGA()
 {
     fitnessStatus.clear();
-}
-
-bool isKnapsackFeasible(vector<int> indiv, Knapsack knapsack)
-{
-    bool isFeasible = false;
-    unsigned int instanceSize = indiv.size();
-
-    unsigned int* instance = new unsigned int[instanceSize]();
-    for (unsigned int pos = 0; pos < instanceSize; ++pos)
-    {
-        instance[pos] = indiv.at(pos);
-    }
-
-    isFeasible = knapsack.isFeasible(instance, instanceSize);
-
-    delete(instance);
-
-    return isFeasible;
 }
 
 void CanonicalGA::runFitnessEvaluation()
@@ -57,7 +29,7 @@ void CanonicalGA::runFitnessEvaluation()
         weight = this->knapsack.evaluateWeight(instance, instanceSize);
 
         if (this->infeasiblesPolicy == InfeasiblesPolicy::Penalize &&
-            (!isKnapsackFeasible(individual, knapsack)))
+            (!this->knapsack.isFeasible(individual)))
         {
             value -= this->penalizeInfeasibleIndividual(individual);
             value = value >= 0 ? value : 0;
@@ -69,9 +41,9 @@ void CanonicalGA::runFitnessEvaluation()
     delete(instance);
 }
 
-void printFitness(Population population)
+void CanonicalGA::printFitness(Population population)
 {
-    for (Fitness fit : fitnessStatus)
+    for (Fitness fit : this->fitnessStatus)
     {
         cout << "Chromosome: " << fit.getId() <<
         " Value: " << fit.getValue() << endl;
@@ -80,11 +52,11 @@ void printFitness(Population population)
 
 int CanonicalGA::runRouletteWhellSelection()
 {
-    double normFitness[fitnessStatus.size()];
+    double normFitness[this->fitnessStatus.size()];
     double factor, sum;
     unsigned int pos;
 
-    factor = randomHelper.getRandomBetween0and1();
+    factor = this->randomHelper.getRandomBetween0and1();
 
     sum = 0;
     for (Fitness fit : fitnessStatus)
@@ -116,7 +88,7 @@ void CanonicalGA::moderateGeneration(vector<vector<int>> &generation)
     {
         for (it = generation.begin(); it != generation.end(); ++it)
         {
-            if (!isKnapsackFeasible(*it, this->knapsack))
+            if (!this->knapsack.isFeasible(*it))
             {
                 this->repairInfeasibleIndividual(*it);
             }
@@ -197,8 +169,6 @@ ExecutionReport CanonicalGA::executeEvolution()
     vector<vector<int>>::iterator itChild;
 
     generation = this->population.create(this->knapsack.getMaxNumberOfItens());
-    this->population.show(generation);
-    /*
     this->moderateGeneration(generation); // avoiding infeasibilities
     this->population.addIndividuals(generation);
     this->runFitnessEvaluation();
@@ -259,9 +229,7 @@ ExecutionReport CanonicalGA::executeEvolution()
     report.setInfeasiblesPolicy(this->infeasiblesPolicy);
 
     return report;
-    */
 
-    ExecutionReport report;
     return report;
 }
 

@@ -1,8 +1,9 @@
-#include "Fitness.h"
+#include "../include/Fitness.h"
 
 Fitness::Fitness()
 {
 }
+
 Fitness::Fitness(unsigned int id, unsigned int value)
 {
     this->id = id;

@@ -5,10 +5,15 @@
 
 #include <config.h>
 #include <vector>
+#include <iostream>
+#include <cstdlib>
+#include <cmath>
+
 #include "Knapsack.h"
 #include "Population.h"
-#include <Fitness.h>
-#include <ExecutionReport.h>
+#include "Fitness.h"
+#include "RandomHelper.h"
+#include "ExecutionReport.h"
 
 using namespace std;
 
@@ -18,6 +23,8 @@ class CanonicalGA
     Knapsack knapsack;
     Population population;
     InfeasiblesPolicy infeasiblesPolicy;
+    RandomHelper randomHelper;
+    vector<Fitness> fitnessStatus;
 
     public:
         CanonicalGA(unsigned int generations, Knapsack knapsack, Population population, InfeasiblesPolicy infeasiblesPolicy):
@@ -28,7 +35,7 @@ class CanonicalGA
             CanonicalGA(knapsack, population, InfeasiblesPolicy::Repair){};
         CanonicalGA():
             generationsLimit(MAX_GENERATIONS), infeasiblesPolicy(InfeasiblesPolicy::Repair){};
-        virtual ~CanonicalGA();
+        ~CanonicalGA();
 
         int runRouletteWhellSelection();
         ExecutionReport executeEvolution();
@@ -40,6 +47,9 @@ class CanonicalGA
         void setInfeasiblesPolicy(InfeasiblesPolicy policy);
         void setGenerationsLimit(unsigned int limit);
         void setPopulationSize(unsigned int size);
+
+        // Auxiliary methods
+        void printFitness(Population population);
 };
 
 #endif // AGCANONICO_H

@@ -1,6 +1,5 @@
-#include "RandomHelper.h"
-#include <time.h>
-#include <stdlib.h>
+#include "../include/RandomHelper.h"
+
 
 RandomHelper::RandomHelper()
 {
@@ -9,6 +8,7 @@ RandomHelper::RandomHelper()
 
 RandomHelper::~RandomHelper()
 {
+
 }
 
 unsigned int RandomHelper::getRandomBetweenZeroTo(int max)
