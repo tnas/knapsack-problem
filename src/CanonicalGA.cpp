@@ -77,12 +77,7 @@ void CanonicalGA::moderateGeneration(vector<vector<int>>& generation)
         {
             if (!this->knapsack.isFeasible(*it))
             {
-                //cout << "Infeasible!!!" << endl << "B: ";
-                //this->population.showIndividual(*it);
                 this->repairInfeasibleIndividual(*it);
-                //cout << "A: ";
-                //this->population.showIndividual(*it);
-                //cout << endl;
             }
         }
     }
@@ -121,9 +116,8 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int>& indiv)
 
         ++pos;
     }
-    //cout << "Weight: " << totalWeight << " -- Shelf 1: " << shelfWeight[1] << " -- Shelf 2: " << shelfWeight[2] << " -- Shelf 3: " << shelfWeight[3] << endl;
-    //cout << "Shelf 1 capacity: " << shelvesCapacity[1] << " -- Shelf 2 capacity: " << shelvesCapacity[2] << " -- Shelf 3 capacity: " << shelvesCapacity[3] << endl;
-    sort(allelesEvaluation.begin(), allelesEvaluation.end());
+
+    sort(fitnessStatus.begin(), fitnessStatus.end());
 
     Fitness alleleFit;
 
@@ -137,7 +131,6 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int>& indiv)
 
             if (solution[alleleFit.getId()] == shelf)
             {
-                //cout << "Removing object: " << alleleFit.getId() <<  " from shelf " << shelf << " with capacity of " << shelvesCapacity[shelf] << endl;
                 Population::defineAllelesAt(indiv, alleleFit.getId(), 0);
                 shelfWeight[shelf] -= alleleFit.getWeight();
                 totalWeight -= alleleFit.getWeight();

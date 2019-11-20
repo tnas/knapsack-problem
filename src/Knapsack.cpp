@@ -142,8 +142,6 @@ bool Knapsack::checkKnapsackIsFeasible(unsigned int* solution, unsigned int solS
             shelfWeight[solution[obj]] += itensWeight[obj];
         }
     }
-    //cout << "Checking ..." << endl;
-    //cout << "Weight: " << totalWeight << " -- Shelf 1: " << shelfWeight[1] << " -- Shelf 2: " << shelfWeight[2] << " -- Shelf 3: " << shelfWeight[3] << endl;
 
     if (totalWeight > this->capacity)
     {
