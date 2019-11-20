@@ -117,7 +117,7 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int>& indiv)
         ++pos;
     }
 
-    sort(fitnessStatus.begin(), fitnessStatus.end());
+    sort(allelesEvaluation.begin(), allelesEvaluation.end());
 
     Fitness alleleFit;
 

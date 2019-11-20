@@ -85,8 +85,7 @@ unsigned int Knapsack::evaluateValue(unsigned int* instance, unsigned int size)
 void Knapsack::evaluateWeightValue(vector<int>instance, unsigned int& indivWeight,
                                    unsigned int& indivValue)
 {
-    unsigned int totalWeight, totalValue;
-    totalWeight = totalValue = 0;
+    indivWeight = indivValue = 0;
     unsigned int* solution = nullptr;
     unsigned int solSize = Population::individualToKnapsack(instance, solution);
 
@@ -94,8 +93,8 @@ void Knapsack::evaluateWeightValue(vector<int>instance, unsigned int& indivWeigh
     {
         if (solution[obj] != 0)
         {
-            totalWeight += itensWeight[obj];
-            totalValue += itensValue[obj];
+            indivWeight += itensWeight[obj];
+            indivValue += itensValue[obj];
         }
     }
 
@@ -105,8 +104,7 @@ void Knapsack::evaluateWeightValue(vector<int>instance, unsigned int& indivWeigh
 void Knapsack::evaluateWeightValue(vector<int>instance, unsigned int& indivWeight,
                                    unsigned int& indivValue, unsigned int*& shelfWeight)
 {
-    unsigned int totalWeight, totalValue;
-    totalWeight = totalValue = 0;
+    indivWeight = indivValue = 0;
     unsigned int* solution = nullptr;
     unsigned int solSize = Population::individualToKnapsack(instance, solution);
 
@@ -117,8 +115,8 @@ void Knapsack::evaluateWeightValue(vector<int>instance, unsigned int& indivWeigh
     {
         if (solution[obj] != 0)
         {
-            totalWeight += itensWeight[obj];
-            totalValue += itensValue[obj];
+            indivWeight += itensWeight[obj];
+            indivValue += itensValue[obj];
             shelfWeight[solution[obj]] += itensWeight[obj];
         }
     }

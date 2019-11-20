@@ -134,12 +134,12 @@ void Population::addIndividual(vector<int> individual)
 
 void Population::addIndividuals(vector<vector<int>>indivs)
 {
-    individuals.insert(end(individuals), begin(indivs), end(indivs));
+    this->individuals.insert(end(individuals), begin(indivs), end(indivs));
 }
 
 vector<int> Population::getIndividual(unsigned int id)
 {
-    return individuals.at(id);
+    return this->individuals.at(id);
 }
 
 void Population::shrink(int selecteds[])
@@ -157,12 +157,12 @@ void Population::shrink(int selecteds[])
 
 void Population::destroy()
 {
-    individuals.clear();
+    this->individuals.clear();
 }
 
 int Population::getAllele(int individual, int position)
 {
-    return individuals.at(individual).at(position);
+    return this->individuals.at(individual).at(position);
 }
 
 unsigned int Population::getIndividualSize()
@@ -182,7 +182,7 @@ unsigned int Population::getOffspringSize()
 
 int Population::getCurrentSize()
 {
-    return individuals.size();
+    return this->individuals.size();
 }
 
 void Population::showIndividual(vector<int> indiv)
