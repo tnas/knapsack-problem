@@ -5,6 +5,7 @@
 #include <string.h>
 #include <limits>
 
+
 class Knapsack
 {
     unsigned int capacity;

@@ -1,11 +1,4 @@
 #include "../include/Population.h"
-#include <stdlib.h>
-#include <stdint.h>
-#include <iostream>
-
-static vector<vector<int>> individuals;
-static RandomHelper randomHelper;
-
 
 unsigned int Population::individualToKnapsack(unsigned int* individual, unsigned int indivSize, unsigned int*& instance)
 {
@@ -69,7 +62,7 @@ vector<vector<int>> Population::create(unsigned int individualSize)
 
         for (unsigned int allele = 0; allele < individualSize; ++allele)
         {
-            string binaryShelf = bitset<2>(randomHelper.getRandomBetweenZeroTo(3)).to_string();
+            string binaryShelf = bitset<2>(this->randomHelper.getRandomBetweenZeroTo(3)).to_string();
             individual.push_back(stoi(binaryShelf.substr(0,1)));
             individual.push_back(stoi(binaryShelf.substr(1,1)));
         }
@@ -80,15 +73,15 @@ vector<vector<int>> Population::create(unsigned int individualSize)
     return firstGeneration;
 }
 
-void makeMutation(vector<int> individual, int allele)
+void Population::makeMutation(vector<int> individual, int allele)
 {
-    if (randomHelper.getRandomBetween0and1() < MUTATION_PROPABILITY)
+    if (this->randomHelper.getRandomBetween0and1() < MUTATION_PROPABILITY)
         individual.at(allele) ^= 1;
 }
 
-bool isAlleleExchangeable()
+bool Population::isAlleleExchangeable()
 {
-    return randomHelper.getRandomBetween0and1() < CROSSOVER_PROBABILITY;
+    return this->randomHelper.getRandomBetween0and1() < CROSSOVER_PROBABILITY;
 }
 
 vector<vector<int>> Population::reproduce(int first, int second)

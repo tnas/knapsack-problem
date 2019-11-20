@@ -5,9 +5,12 @@
 #include <vector>
 #include <sstream>
 #include <bitset>
+#include <stdlib.h>
+#include <stdint.h>
+#include <iostream>
 
-#define CROSSOVER_PROBABILITY 0.9
-#define MUTATION_PROPABILITY  0.1
+#define CROSSOVER_PROBABILITY 0.95
+#define MUTATION_PROPABILITY  0.3
 #define DEFAULT_THRESHOLD 100
 
 using namespace std;
@@ -19,6 +22,11 @@ class Population
     unsigned int individualSize;
     float crossoverProbability;
     float mutationProbaility;
+    RandomHelper randomHelper;
+    vector<vector<int>> individuals;
+
+    void makeMutation(vector<int> individual, int allele);
+    bool isAlleleExchangeable();
 
     public:
 

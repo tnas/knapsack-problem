@@ -77,12 +77,12 @@ void CanonicalGA::moderateGeneration(vector<vector<int>>& generation)
         {
             if (!this->knapsack.isFeasible(*it))
             {
-                cout << "Infeasible!!!" << endl << "Before repairing: ";
-                this->population.showIndividual(*it);
+                //cout << "Infeasible!!!" << endl << "B: ";
+                //this->population.showIndividual(*it);
                 this->repairInfeasibleIndividual(*it);
-                cout << endl << "After repairing: ";
-                this->population.showIndividual(*it);
-                cout << endl;
+                //cout << "A: ";
+                //this->population.showIndividual(*it);
+                //cout << endl;
             }
         }
     }
@@ -94,6 +94,15 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int>& indiv)
     vector<Fitness> allelesEvaluation;
     unsigned int pos, value, weight, totalWeight;
 
+    unsigned int* solution = nullptr;
+    Population::individualToKnapsack(indiv, solution);
+
+    unsigned int* shelvesCapacity = this->knapsack.getShelvesCapacity();
+    unsigned int nShelves = this->knapsack.getNumberOfShelves();
+    unsigned int* shelfWeight = new unsigned int[nShelves]();
+    for (unsigned int shelf = 0; shelf < nShelves; ++shelf)
+        shelfWeight[shelf] = 0;
+
     pos = totalWeight = 0;
 
     for (it = indiv.begin(); it != indiv.end(); ++it)
@@ -101,33 +110,52 @@ void CanonicalGA::repairInfeasibleIndividual(vector<int>& indiv)
         int stAllele = *it;
         int ndAllele = *(++it);
 
-        if (stAllele == 0 && ndAllele == 0)
-        {
-            value = weight = 0;
-        }
-        else
+        if (stAllele != 0 || ndAllele != 0) // same condition: solution[pos] != 0
         {
             value  = this->knapsack.getItemValue(pos);
             weight = this->knapsack.getItemWeight(pos);
+            totalWeight += weight;
+            shelfWeight[solution[pos]] += weight;
+            allelesEvaluation.push_back(Fitness(pos, value, weight));
         }
 
-        totalWeight += weight;
-        allelesEvaluation.push_back(Fitness(pos, value, weight));
         ++pos;
     }
+    //cout << "Weight: " << totalWeight << " -- Shelf 1: " << shelfWeight[1] << " -- Shelf 2: " << shelfWeight[2] << " -- Shelf 3: " << shelfWeight[3] << endl;
+    //cout << "Shelf 1 capacity: " << shelvesCapacity[1] << " -- Shelf 2 capacity: " << shelvesCapacity[2] << " -- Shelf 3 capacity: " << shelvesCapacity[3] << endl;
+    sort(allelesEvaluation.begin(), allelesEvaluation.end());
 
-    sort(fitnessStatus.begin(), fitnessStatus.end());
+    Fitness alleleFit;
 
-    for (vector<Fitness>::iterator itFit = allelesEvaluation.begin();
-         itFit != allelesEvaluation.end() && totalWeight > this->knapsack.getCapacity();
-         ++itFit)
+    // Repairing shelves
+    for (unsigned int shelf = 1; shelf < nShelves; ++shelf)
     {
-        Fitness alleleFit = *itFit;
-        if (alleleFit.getValue() == 0) continue;
+        for (vector<Fitness>::iterator itFit = allelesEvaluation.begin();
+         itFit != allelesEvaluation.end() && shelfWeight[shelf] > shelvesCapacity[shelf]; ++itFit)
+        {
+            alleleFit = *itFit;
 
+            if (solution[alleleFit.getId()] == shelf)
+            {
+                //cout << "Removing object: " << alleleFit.getId() <<  " from shelf " << shelf << " with capacity of " << shelvesCapacity[shelf] << endl;
+                Population::defineAllelesAt(indiv, alleleFit.getId(), 0);
+                shelfWeight[shelf] -= alleleFit.getWeight();
+                totalWeight -= alleleFit.getWeight();
+            }
+        }
+    }
+
+    // Repairing knapsack
+    for (vector<Fitness>::iterator itFit = allelesEvaluation.begin();
+         itFit != allelesEvaluation.end() && totalWeight > this->knapsack.getCapacity(); ++itFit)
+    {
+        alleleFit = *itFit;
         Population::defineAllelesAt(indiv, alleleFit.getId(), 0);
         totalWeight -= alleleFit.getWeight();
     }
+
+    delete(solution);
+    delete(shelfWeight);
 }
 
 unsigned int CanonicalGA::penalizeInfeasibleIndividual(vector<int> indiv)

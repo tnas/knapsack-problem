@@ -110,7 +110,8 @@ void Knapsack::evaluateWeightValue(vector<int>instance, unsigned int& indivWeigh
     unsigned int* solution = nullptr;
     unsigned int solSize = Population::individualToKnapsack(instance, solution);
 
-    memset(shelfWeight, 0, this->nShelves*sizeof(*shelfWeight));
+    for (unsigned int shelf = 0; shelf < nShelves; ++shelf)
+        shelfWeight[shelf] = 0;
 
     for (unsigned int obj = 0; obj < solSize; ++obj)
     {
@@ -130,7 +131,8 @@ bool Knapsack::checkKnapsackIsFeasible(unsigned int* solution, unsigned int solS
     bool isFeasible = true;
     unsigned int totalWeight = 0;
     unsigned int* shelfWeight = new unsigned int[this->nShelves]();
-    memset(shelfWeight, 0, this->nShelves*sizeof(*shelfWeight));
+    for (unsigned int shelf = 0; shelf < nShelves; ++shelf)
+        shelfWeight[shelf] = 0;
 
     for (unsigned int obj = 0; obj < solSize; ++obj)
     {
@@ -140,6 +142,8 @@ bool Knapsack::checkKnapsackIsFeasible(unsigned int* solution, unsigned int solS
             shelfWeight[solution[obj]] += itensWeight[obj];
         }
     }
+    //cout << "Checking ..." << endl;
+    //cout << "Weight: " << totalWeight << " -- Shelf 1: " << shelfWeight[1] << " -- Shelf 2: " << shelfWeight[2] << " -- Shelf 3: " << shelfWeight[3] << endl;
 
     if (totalWeight > this->capacity)
     {
