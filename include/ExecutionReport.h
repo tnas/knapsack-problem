@@ -1,9 +1,11 @@
 #ifndef EXECUTIONREPORT_H
 #define EXECUTIONREPORT_H
 
-#include <iostream>
 #include <vector>
 #include <string>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <config.h>
 #include <Knapsack.h>
 #include <Population.h>

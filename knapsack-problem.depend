@@ -216,10 +216,12 @@
 1574098514 d:\myprojects\knapsack-problem\include\fitness.h
 	<algorithm>
 
-1574187288 d:\myprojects\knapsack-problem\include\executionreport.h
-	<iostream>
+1574275213 d:\myprojects\knapsack-problem\include\executionreport.h
 	<vector>
 	<string>
+	<iostream>
+	<iomanip>
+	<sstream>
 	<config.h>
 	<Knapsack.h>
 	<Population.h>
@@ -228,7 +230,7 @@
 	<CanonicalGA.h>
 	<vector>
 
-1574273944 source:d:\myprojects\knapsack-problem\src\canonicalga.cpp
+1574274044 source:d:\myprojects\knapsack-problem\src\canonicalga.cpp
 	"../include/CanonicalGA.h"
 
 1574171665 d:\myprojects\knapsack-problem\include\randomhelper.h
@@ -242,7 +244,7 @@
 	<iostream>
 	<fstream>
 
-1574191484 source:d:\myprojects\knapsack-problem\src\executionreport.cpp
+1574275614 source:d:\myprojects\knapsack-problem\src\executionreport.cpp
 	"ExecutionReport.h"
 
 1574171665 source:d:\myprojects\knapsack-problem\src\fitness.cpp

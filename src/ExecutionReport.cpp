@@ -162,11 +162,17 @@ string ExecutionReport::getShelvesDetails()
     unsigned int* shelvesWeight = new unsigned[nShelves];
     unsigned int* shelvesValue = new unsigned[nShelves];
 
-    memset(shelvesWeight, 0, nShelves*sizeof(*shelvesWeight));
-    memset(shelvesValue, 0, nShelves*sizeof(*shelvesValue));
+    for (unsigned int shelf = 0; shelf < nShelves; ++shelf)
+        shelvesWeight[shelf] = shelvesValue[shelf] = 0;
+
+    ostringstream ossObjects, ossLocations;
 
     for (unsigned int obj = 0; obj < solSize; ++obj)
     {
+        unsigned int pad = obj + 1 > 9 ? 3 : 2;
+        ossObjects << setw(pad) << obj + 1;
+        ossLocations << setw(pad) << solution[obj];
+
         if (solution[obj] != 0)
         {
             shelves[solution[obj]].append(string(to_string(obj + 1)) + " ");
@@ -175,12 +181,15 @@ string ExecutionReport::getShelvesDetails()
         }
     }
 
+    output.append("Obj:").append(ossObjects.str()).append("\n")
+          .append("Loc:").append(ossLocations.str()).append("\n\n");
+
     for (unsigned int shelf = 1; shelf < nShelves; ++shelf)
     {
         output.append("Compartment " + to_string(shelf) + " - ");
         output.append("Weight: " + to_string(shelvesWeight[shelf]) + " - " +
                       "Value: " + to_string(shelvesValue[shelf]) + "\n");
-        output.append("Items: " + shelves[shelf] + "\n");
+        output.append("Items: " + shelves[shelf] + "\n\n");
     }
 
     delete(solution);
