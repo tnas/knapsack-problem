@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1574156097 source:/home/thiago/projects/knapsack-problem/main.cpp
+1585836504 source:/home/thiago/projects/knapsack-problem/main.cpp
 	<iostream>
 	<ctype.h>
 	<unistd.h>
@@ -17,25 +17,24 @@
 	"Knapsack.h"
 	"Population.h"
 
-1574161007 /home/thiago/projects/knapsack-problem/include/Knapsack.h
+1585746004 /home/thiago/projects/knapsack-problem/include/Knapsack.h
 	"Population.h"
 	<string.h>
 	<limits>
 
-1574159102 /home/thiago/projects/knapsack-problem/include/Population.h
+1585839927 /home/thiago/projects/knapsack-problem/include/Population.h
 	"RandomHelper.h"
 	<vector>
-	<sstream>
+	<stdlib.h>
+	<iostream>
+	<string>
 	<bitset>
 
-1574161068 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
+1585746004 source:/home/thiago/projects/knapsack-problem/src/Knapsack.cpp
 	"../include/Knapsack.h"
 
-1574159041 source:/home/thiago/projects/knapsack-problem/src/Population.cpp
+1596719571 source:/home/thiago/projects/knapsack-problem/src/Population.cpp
 	"../include/Population.h"
-	<stdlib.h>
-	<stdint.h>
-	<iostream>
 
 1574160273 source:/home/thiago/projects/knapsack-problem/src/RandomHelper.cpp
 	"../include/RandomHelper.h"
@@ -66,17 +65,20 @@
 1554279968 /home/thiago/projects/knapsack-problem/include/Fitness.h
 	<algorithm>
 
-1554279968 /home/thiago/projects/knapsack-problem/include/ExecutionReport.h
-	<iostream>
+1585746004 /home/thiago/projects/knapsack-problem/include/ExecutionReport.h
 	<vector>
 	<string>
+	<iostream>
+	<iomanip>
+	<sstream>
 	<config.h>
 	<Knapsack.h>
+	<Population.h>
 
-1574160625 source:/home/thiago/projects/knapsack-problem/src/CanonicalGA.cpp
+1596719674 source:/home/thiago/projects/knapsack-problem/src/CanonicalGA.cpp
 	"../include/CanonicalGA.h"
 
-1554279968 source:/home/thiago/projects/knapsack-problem/src/ExecutionReport.cpp
+1585746004 source:/home/thiago/projects/knapsack-problem/src/ExecutionReport.cpp
 	"ExecutionReport.h"
 
 1574160478 source:/home/thiago/projects/knapsack-problem/src/Fitness.cpp

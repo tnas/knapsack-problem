@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Option parameters="-r -g 1 -p 2 -i 0" />
 				<Compiler>
+					<Add option="-std=c++14" />
 					<Add option="-g" />
 					<Add directory="include" />
 				</Compiler>

@@ -3,11 +3,10 @@
 
 #include "RandomHelper.h"
 #include <vector>
-#include <sstream>
-#include <bitset>
 #include <stdlib.h>
-#include <stdint.h>
 #include <iostream>
+#include <string>
+#include <bitset>
 
 #define CROSSOVER_PROBABILITY 0.95
 #define MUTATION_PROPABILITY  0.3
@@ -39,7 +38,7 @@ class Population
         Population(int threshold, int offspringSize): threshold(threshold),
             offspringSize(offspringSize){};
         virtual ~Population();
-        vector<vector<int>> create(unsigned int individualSize);
+        void create(unsigned int individualSize, vector<vector<int>>& generation);
         vector<vector<int>> reproduce(int first, int second);
         void addIndividual(vector<int> individual);
         void addIndividuals(vector<vector<int>> indivs);

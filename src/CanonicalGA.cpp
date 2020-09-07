@@ -188,9 +188,23 @@ ExecutionReport CanonicalGA::executeEvolution()
     this->reset();
 
     vector<vector<int>> generation;
-    vector<vector<int>>::iterator itChild;
 
-    generation = this->population.create(this->knapsack.getMaxNumberOfItens());
+    this->population.create(this->knapsack.getMaxNumberOfItens(), generation);
+
+
+    cout << generation.size() << endl;
+    for (unsigned int indiv = 0; indiv < generation.size(); ++indiv)
+    {
+        for (unsigned int allele = 0; allele < 20; ++allele)
+        {
+            cout << generation.at(indiv)[2*allele] << generation.at(indiv)[2*allele+1] << " ";
+        }
+
+        cout << endl;
+    }
+    this->population.show(generation);
+
+
     this->moderateGeneration(generation); // avoiding infeasibilities
     this->population.addIndividuals(generation);
     this->runFitnessEvaluation();

@@ -45,32 +45,51 @@ void Population::setOffspringSize(int size)
 /*
  The individual size is considered multiplied by 2
  because of its binary representation associated with
- the shelf in which it is allocated. Then,
+ the shelf it is allocated in. Then,
  00 -> individual is not in the any shelf
  01 -> individual is in the shelf 1
  10 -> individual is in the shelf 2
  11 -> individual is in the shelf 3
  */
-vector<vector<int>> Population::create(unsigned int individualSize)
+void Population::create(unsigned int individualSize, vector<vector<int>>& generation)
 {
-    this->individualSize = individualSize*2; // binary representation
-    vector<vector<int>> firstGeneration;
+    this->individualSize = individualSize * 2; // binary representation
 
     for (unsigned int indiv = 0; indiv < this->threshold; ++indiv)
     {
-        vector<int> individual;
+//        vector<int>* individual = new vector<int>();
+        vector<int> individual(individualSize*2);
 
         for (unsigned int allele = 0; allele < individualSize; ++allele)
         {
             string binaryShelf = bitset<2>(this->randomHelper.getRandomBetweenZeroTo(3)).to_string();
-            individual.push_back(stoi(binaryShelf.substr(0,1)));
-            individual.push_back(stoi(binaryShelf.substr(1,1)));
+            individual.at(2*allele)   = stoi(binaryShelf.substr(0,1));
+            individual.at(2*allele+1) = stoi(binaryShelf.substr(1,1));
+//            cout << "Indiv: " << indiv << " allele: " << allele << " --> str: " << binaryShelf
+//            << " --> bits: " << individual.at(2*allele) << " - " << individual.at(2*allele+1) << endl;
         }
 
-        firstGeneration.push_back(individual);
+//        cout << "Before push_back: " << endl;
+//        for (unsigned int allele = 0; allele < individualSize; ++allele)
+//        {
+//            cout << individual.at(2*allele) << individual.at(2*allele+1) << " ";
+//        }
+//        cout << endl;
+
+        generation.push_back(individual);
+//        delete(individual);
     }
 
-    return firstGeneration;
+//    cout << "Printing individuals: " << endl;
+//    for (unsigned int indiv = 0; indiv < generation.size(); ++indiv)
+//    {
+//        for (unsigned int allele = 0; allele < this->individualSize/2; ++allele)
+//        {
+//            cout << generation[indiv][2*allele] << generation[indiv][2*allele+1] << " ";
+//        }
+//
+//        cout << endl;
+//    }
 }
 
 void Population::makeMutation(vector<int> individual, int allele)
@@ -189,9 +208,11 @@ void Population::showIndividual(vector<int> indiv)
 {
     for (unsigned int allele = 0; allele < this->individualSize/2; ++allele)
     {
-        string binaryIndiv = to_string(indiv.at(2*allele)) + to_string(indiv.at(2*allele+1));
-
+        string binaryIndiv = to_string(indiv[2*allele]) + to_string(indiv[2*allele+1]);
         cout << stoi(binaryIndiv, nullptr, 2) << " ";
+
+//        cout << indiv[2*allele] << indiv[2*allele+1] << " ";
+//        cout << str1 << str2 << " ";
     }
 
     cout << endl;
@@ -199,9 +220,23 @@ void Population::showIndividual(vector<int> indiv)
 
 void Population::show(vector<vector<int>> generation)
 {
-    for (vector<int> indiv : generation)
-        this->showIndividual(indiv);
+    for (unsigned int indiv = 0; indiv < generation.size(); ++indiv)
+        this->showIndividual(generation.at(indiv));
 }
+
+
+//void Population::show(vector<vector<int>> generation)
+//{
+//    for (unsigned int indiv = 0; indiv < generation.size(); ++indiv)
+//    {
+//        for (unsigned int allele = 0; allele < this->individualSize/2; ++allele)
+//        {
+//            cout << generation.at(indiv)[2*allele] << generation.at(indiv)[2*allele+1] << " ";
+//        }
+//
+//        cout << endl;
+//    }
+//}
 
 void Population::show()
 {
